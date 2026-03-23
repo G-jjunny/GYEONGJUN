@@ -15,6 +15,8 @@ interface FloatingThemePanelProps {
   theme: Theme;
   /** 테마 변경 핸들러 (store에서 전달) */
   setTheme: (theme: Theme) => void;
+  /** 인트로 다시보기 핸들러 */
+  onReplayIntro?: () => void;
 }
 
 const springTransition = {
@@ -26,6 +28,7 @@ const springTransition = {
 export default function FloatingThemePanel({
   theme,
   setTheme,
+  onReplayIntro,
 }: FloatingThemePanelProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -128,6 +131,48 @@ export default function FloatingThemePanel({
                 </motion.button>
               );
             })}
+
+            {/* 구분선 + 인트로 다시보기 버튼 */}
+            {onReplayIntro && (
+              <>
+                <div
+                  style={{
+                    borderTop: 'var(--border-width) solid var(--color-border)',
+                    margin: '2px 0',
+                  }}
+                />
+                <motion.button
+                  className={[
+                    'w-6 h-6 flex items-center justify-center',
+                    'rounded-[var(--radius)] cursor-pointer',
+                    'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
+                  ].join(' ')}
+                  style={{
+                    background: 'var(--color-surface)',
+                    color: 'var(--color-accent)',
+                  }}
+                  onClick={() => {
+                    onReplayIntro();
+                    setIsOpen(false);
+                  }}
+                  whileHover={{ x: 2, y: 2, transition: springTransition }}
+                  whileTap={{ x: 3, y: 3, transition: springTransition }}
+                  aria-label="인트로 다시보기"
+                  title="인트로 다시보기"
+                >
+                  {/* 재생 아이콘 */}
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                </motion.button>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

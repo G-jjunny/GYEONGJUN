@@ -1,4 +1,5 @@
 import { portfolioData } from '@/data/portfolio';
+import IntroController from '@/components/IntroController';
 import HeroSectionWrapper from '@/components/sections/HeroSectionWrapper';
 import AboutSection from '@/components/sections/AboutSection';
 import ProjectsSection from '@/components/sections/ProjectsSection';
@@ -12,6 +13,11 @@ import ContactSection from '@/components/sections/ContactSection';
 
 export default function Home() {
   return (
+    <>
+      <IntroController
+        name={portfolioData.personal.name}
+        title={portfolioData.personal.title}
+      />
     <main>
       <HeroSectionWrapper personal={portfolioData.personal} />
       <AboutSection
@@ -31,5 +37,6 @@ export default function Home() {
         }}
       />
     </main>
+    </>
   );
 }
