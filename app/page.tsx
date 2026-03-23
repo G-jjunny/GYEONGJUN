@@ -23,6 +23,8 @@ export default function Home() {
       <AboutSection
         bio={portfolioData.personal.bio}
         skills={portfolioData.skills}
+        avatarUrl={portfolioData.personal.avatarUrl}
+        name={portfolioData.personal.name}
       />
       <ProjectsSection projects={portfolioData.projects} />
       <ExperienceSection

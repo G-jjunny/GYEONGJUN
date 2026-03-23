@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { THEMES, type Theme } from '@/types/theme';
+import { THEMES, THEME_COLORS, type Theme } from '@/types/theme';
 
 // =============================================================
 // FloatingThemePanel — 화면 우측 중앙 고정 테마 전환 패널
@@ -99,11 +99,8 @@ export default function FloatingThemePanel({
                       : 'border-[var(--color-border)]',
                   ].join(' ')}
                   style={{
-                    backgroundColor:
-                      themeId === 'mint' ? '#00ff9c'
-                      : themeId === 'amber' ? '#f5a623'
-                      : '#7eb8f7',
-                    boxShadow: isActive ? '3px 3px 0 var(--color-accent)' : 'none',
+                    backgroundColor: THEME_COLORS[themeId],
+                    boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
                   }}
                   onClick={() => setTheme(themeId)}
                   whileHover={{ x: 2, y: 2, transition: springTransition }}

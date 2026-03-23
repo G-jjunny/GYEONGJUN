@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Skill } from "@/data/portfolio";
+import Image from "next/image";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import SkillMarquee from "@/components/ui/SkillMarquee";
@@ -14,10 +15,14 @@ import { springBase } from "@/lib/motion";
 interface AboutSectionProps {
   bio: string;
   skills: Skill[];
+  avatarUrl?: string;
+  name?: string;
 }
 
-export default function AboutSection({ bio, skills }: AboutSectionProps) {
+export default function AboutSection({ bio, skills, avatarUrl, name }: AboutSectionProps) {
   const displayBio = bio || "자기소개를 입력하세요.";
+  const initial = name ? name.charAt(0) : "?";
+
 
   const skillTags = skills.map((s) => ({
     name: s.name,
@@ -32,9 +37,9 @@ export default function AboutSection({ bio, skills }: AboutSectionProps) {
     <SectionWrapper id="about">
       <SectionHeading subtitle="About Me">소개</SectionHeading>
 
-      {/* Bio 텍스트 */}
+      {/* Avatar + Bio */}
       <motion.div
-        className="mb-16"
+        className="mb-16 flex flex-col items-start gap-8 sm:flex-row sm:items-start"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
@@ -43,6 +48,41 @@ export default function AboutSection({ bio, skills }: AboutSectionProps) {
           visible: { opacity: 1, y: 0, transition: { ...springBase, delay: 0.2 } },
         }}
       >
+        {/* 프로필 이미지 */}
+        <div
+          className="shrink-0"
+          style={{
+            width: 'clamp(120px, 18vw, 200px)',
+            height: 'clamp(120px, 18vw, 200px)',
+            border: 'var(--border-width) solid var(--color-accent)',
+            boxShadow: 'var(--shadow-lg)',
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          {avatarUrl ? (
+            <Image
+              src={avatarUrl}
+              alt={name ?? "프로필 이미지"}
+              fill
+              style={{ objectFit: 'cover' }}
+              sizes="200px"
+            />
+          ) : (
+            // 이미지 없을 때 이니셜 플레이스홀더
+            <div
+              className="flex h-full w-full items-center justify-center text-5xl font-black"
+              style={{
+                background: 'var(--color-surface)',
+                color: 'var(--color-accent)',
+              }}
+            >
+              {initial}
+            </div>
+          )}
+        </div>
+
+        {/* Bio 텍스트 */}
         <p
           className="whitespace-pre-line text-lg leading-relaxed sm:text-xl"
           style={{ color: "var(--color-text)" }}
