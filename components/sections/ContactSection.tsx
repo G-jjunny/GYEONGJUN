@@ -1,44 +1,25 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import type { ContactInfo, PersonalInfo } from '@/data/portfolio';
-import SectionHeading from '@/components/ui/SectionHeading';
-import BrutalCard from '@/components/ui/BrutalCard';
+import { motion } from "framer-motion";
+import type { ContactInfo, PersonalInfo } from "@/data/portfolio";
+import SectionHeading from "@/components/ui/SectionHeading";
+import SectionWrapper from "@/components/ui/SectionWrapper";
+import BrutalCard from "@/components/ui/BrutalCard";
+import {
+  fadeUpVariant,
+  staggerContainerVariant,
+  springBase,
+  springFast,
+} from "@/lib/motion";
 
 // =============================================================
 // ContactSection — Contact + Outro 섹션
-// 연락처 카드 그리드 + 하단 Outro 문구
-// whileInView Pop-up 패턴, Physical Press 링크 카드
 // =============================================================
 
 interface ContactSectionProps {
   contact: ContactInfo;
-  personal: Pick<PersonalInfo, 'name' | 'nameEn'>;
+  personal: Pick<PersonalInfo, "name" | "nameEn">;
 }
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 300,
-      damping: 24,
-    },
-  },
-};
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.15,
-    },
-  },
-};
 
 // --------------- 인라인 SVG 아이콘 ---------------
 
@@ -136,233 +117,181 @@ interface ContactItem {
   href?: string;
 }
 
-/** 연락처 데이터에서 표시할 항목 목록 생성 */
 function buildContactItems(contact: ContactInfo): ContactItem[] {
   const items: ContactItem[] = [];
 
   if (contact.email) {
     items.push({
-      key: 'email',
+      key: "email",
       icon: <EmailIcon />,
-      label: 'Email',
+      label: "Email",
       value: contact.email,
       href: `mailto:${contact.email}`,
     });
   }
-
   if (contact.github) {
     items.push({
-      key: 'github',
+      key: "github",
       icon: <GithubIcon />,
-      label: 'GitHub',
+      label: "GitHub",
       value: contact.github,
-      href: contact.github.startsWith('http')
+      href: contact.github.startsWith("http")
         ? contact.github
         : `https://github.com/${contact.github}`,
     });
   }
-
   if (contact.linkedin) {
     items.push({
-      key: 'linkedin',
+      key: "linkedin",
       icon: <LinkedinIcon />,
-      label: 'LinkedIn',
+      label: "LinkedIn",
       value: contact.linkedin,
-      href: contact.linkedin.startsWith('http')
+      href: contact.linkedin.startsWith("http")
         ? contact.linkedin
         : `https://linkedin.com/in/${contact.linkedin}`,
     });
   }
-
   if (contact.blog) {
     items.push({
-      key: 'blog',
+      key: "blog",
       icon: <BlogIcon />,
-      label: 'Blog',
+      label: "Blog",
       value: contact.blog,
-      href: contact.blog.startsWith('http')
+      href: contact.blog.startsWith("http")
         ? contact.blog
         : `https://${contact.blog}`,
     });
   }
-
   if (contact.phone) {
     items.push({
-      key: 'phone',
+      key: "phone",
       icon: <PhoneIcon />,
-      label: 'Phone',
+      label: "Phone",
       value: contact.phone,
-      // phone은 링크 없음 (표시만)
     });
   }
 
   return items;
 }
 
-/** Physical Press 스프링 전환 설정 */
-const pressSpring = {
-  type: 'spring' as const,
-  stiffness: 600,
-  damping: 35,
-};
+function ContactCard({ item }: { item: ContactItem }) {
+  const inner = (
+    <BrutalCard hoverable={!!item.href} className="cursor-pointer">
+      <div className="flex items-center gap-4">
+        <div
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-(--radius)"
+          style={{
+            background: "var(--color-card)",
+            color: "var(--color-accent)",
+            border: "var(--border-width) solid var(--color-accent)",
+          }}
+        >
+          {item.icon}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p
+            className="text-xs font-bold uppercase tracking-wider"
+            style={{ color: "var(--color-muted)" }}
+          >
+            {item.label}
+          </p>
+          <p
+            className="truncate text-sm font-semibold"
+            style={{ color: "var(--color-text)" }}
+          >
+            {item.value}
+          </p>
+        </div>
+      </div>
+    </BrutalCard>
+  );
+
+  if (!item.href) return inner;
+
+  return (
+    <motion.a
+      href={item.href}
+      target={item.key === "email" ? undefined : "_blank"}
+      rel={item.key === "email" ? undefined : "noopener noreferrer"}
+      className="block no-underline"
+      whileHover={{ x: -2, y: -2, transition: springFast }}
+      whileTap={{ x: 2, y: 2, transition: springFast }}
+    >
+      {inner}
+    </motion.a>
+  );
+}
 
 export default function ContactSection({
   contact,
   personal,
 }: ContactSectionProps) {
   const items = buildContactItems(contact);
-  const hasAnyData = items.length > 0;
-
-  const displayName = personal.name || personal.nameEn || '이름';
+  const displayName = personal.name || personal.nameEn || "이름";
 
   return (
-    <section
-      id="contact"
-      className="relative px-6 py-24"
-      style={{ background: 'var(--color-bg)' }}
-    >
-      <div className="mx-auto max-w-4xl">
-        <SectionHeading subtitle="Get in Touch">연락하기</SectionHeading>
+    <SectionWrapper id="contact">
+      <SectionHeading subtitle="Get in Touch">연락하기</SectionHeading>
 
-        {/* ---- 연락처 카드 그리드 ---- */}
-        {hasAnyData ? (
-          <motion.div
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
-            {items.map((item) => (
-              <motion.div key={item.key} variants={cardVariants}>
-                {item.href ? (
-                  // 링크 가능한 항목: motion.a + Physical Press 패턴
-                  <motion.a
-                    href={item.href}
-                    target={item.key === 'email' ? undefined : '_blank'}
-                    rel={item.key === 'email' ? undefined : 'noopener noreferrer'}
-                    className="block no-underline"
-                    whileHover={{
-                      x: -2,
-                      y: -2,
-                      transition: pressSpring,
-                    }}
-                    whileTap={{
-                      x: 2,
-                      y: 2,
-                      transition: pressSpring,
-                    }}
-                  >
-                    <BrutalCard hoverable className="cursor-pointer">
-                      <div className="flex items-center gap-4">
-                        <div
-                          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius)]"
-                          style={{
-                            background: 'var(--color-card)',
-                            color: 'var(--color-accent)',
-                            border: 'var(--border-width) solid var(--color-accent)',
-                          }}
-                        >
-                          {item.icon}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p
-                            className="text-xs font-bold uppercase tracking-wider"
-                            style={{ color: 'var(--color-muted)' }}
-                          >
-                            {item.label}
-                          </p>
-                          <p
-                            className="truncate text-sm font-semibold"
-                            style={{ color: 'var(--color-text)' }}
-                          >
-                            {item.value}
-                          </p>
-                        </div>
-                      </div>
-                    </BrutalCard>
-                  </motion.a>
-                ) : (
-                  // 링크 불가 항목 (phone 등): div로 렌더
-                  <BrutalCard>
-                    <div className="flex items-center gap-4">
-                      <div
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius)]"
-                        style={{
-                          background: 'var(--color-card)',
-                          color: 'var(--color-accent)',
-                          border: 'var(--border-width) solid var(--color-accent)',
-                        }}
-                      >
-                        {item.icon}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p
-                          className="text-xs font-bold uppercase tracking-wider"
-                          style={{ color: 'var(--color-muted)' }}
-                        >
-                          {item.label}
-                        </p>
-                        <p
-                          className="text-sm font-semibold"
-                          style={{ color: 'var(--color-text)' }}
-                        >
-                          {item.value}
-                        </p>
-                      </div>
-                    </div>
-                  </BrutalCard>
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
-        ) : (
-          // 빈 데이터 플레이스홀더
-          <motion.div
-            className="flex items-center justify-center rounded-[var(--radius)] px-6 py-12"
-            style={{
-              border: 'var(--border-width) dashed var(--color-border)',
-              color: 'var(--color-muted)',
-            }}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          >
-            <p className="text-center text-sm">
-              data/portfolio.ts에 contact 데이터를 추가하면 여기에 표시됩니다.
-            </p>
-          </motion.div>
-        )}
-
-        {/* ---- Outro 섹션 ---- */}
+      {items.length > 0 ? (
         <motion.div
-          className="mt-20 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ type: 'spring', stiffness: 300, damping: 24, delay: 0.3 }}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          variants={staggerContainerVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
         >
-          <p
-            className="text-lg font-medium"
-            style={{ color: 'var(--color-muted)' }}
-          >
-            감사합니다
-          </p>
-          <h3
-            className="mt-3 text-3xl font-black md:text-4xl"
-            style={{ color: 'var(--color-text)' }}
-          >
-            {displayName}
-            <span style={{ color: 'var(--color-accent)' }}>과 함께 만들어요</span>
-          </h3>
-          <div
-            className="mx-auto mt-6 h-[4px] w-20"
-            style={{ background: 'var(--color-accent)' }}
-            aria-hidden="true"
-          />
+          {items.map((item) => (
+            <motion.div key={item.key} variants={fadeUpVariant}>
+              <ContactCard item={item} />
+            </motion.div>
+          ))}
         </motion.div>
-      </div>
-    </section>
+      ) : (
+        <motion.div
+          className="flex items-center justify-center rounded-(--radius) px-6 py-12"
+          style={{
+            border: "var(--border-width) dashed var(--color-border)",
+            color: "var(--color-muted)",
+          }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={springBase}
+        >
+          <p className="text-center text-sm">
+            data/portfolio.ts에 contact 데이터를 추가하면 여기에 표시됩니다.
+          </p>
+        </motion.div>
+      )}
+
+      {/* Outro */}
+      <motion.div
+        className="mt-20 text-center"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ ...springBase, delay: 0.3 }}
+      >
+        <p
+          className="text-lg font-medium"
+          style={{ color: "var(--color-muted)" }}
+        >
+          감사합니다
+        </p>
+        <h3
+          className="mt-3 text-3xl font-black md:text-4xl"
+          style={{ color: "var(--color-text)" }}
+        >
+          {displayName}
+          <span style={{ color: "var(--color-accent)" }}>과 함께 만들어요</span>
+        </h3>
+        <div
+          className="mx-auto mt-6 h-1 w-20"
+          style={{ background: "var(--color-accent)" }}
+          aria-hidden="true"
+        />
+      </motion.div>
+    </SectionWrapper>
   );
 }

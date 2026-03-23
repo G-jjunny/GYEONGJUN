@@ -2,6 +2,7 @@
 
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { forwardRef } from 'react';
+import { springPress } from '@/lib/motion';
 
 // =============================================================
 // BrutalButton — 네오 브루탈리즘 버튼 컴포넌트
@@ -35,12 +36,6 @@ const variantStyles: Record<Variant, string> = {
   ].join(' '),
 };
 
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 500,
-  damping: 30,
-};
-
 const BrutalButton = forwardRef<HTMLButtonElement, BrutalButtonProps>(
   ({ variant = 'primary', className = '', children, ...props }, ref) => {
     return (
@@ -57,13 +52,13 @@ const BrutalButton = forwardRef<HTMLButtonElement, BrutalButtonProps>(
           x: 2,
           y: 2,
           boxShadow: 'var(--shadow-sm)',
-          transition: springTransition,
+          transition: springPress,
         }}
         whileTap={{
           x: 4,
           y: 4,
           boxShadow: '0px 0px 0px transparent',
-          transition: springTransition,
+          transition: springPress,
         }}
         {...props}
       >

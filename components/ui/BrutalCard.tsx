@@ -2,6 +2,7 @@
 
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { forwardRef } from 'react';
+import { springFast } from '@/lib/motion';
 
 // =============================================================
 // BrutalCard — 네오 브루탈리즘 카드 래퍼 컴포넌트
@@ -14,12 +15,6 @@ interface BrutalCardProps extends Omit<HTMLMotionProps<'div'>, 'ref'> {
   hoverable?: boolean;
   children: React.ReactNode;
 }
-
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 600,
-  damping: 35,
-};
 
 const BrutalCard = forwardRef<HTMLDivElement, BrutalCardProps>(
   ({ accent = false, hoverable = false, className = '', children, ...props }, ref) => {
@@ -42,7 +37,7 @@ const BrutalCard = forwardRef<HTMLDivElement, BrutalCardProps>(
                 x: -3,
                 y: -3,
                 boxShadow: 'var(--shadow-lg)',
-                transition: springTransition,
+                transition: springFast,
               }
             : undefined
         }

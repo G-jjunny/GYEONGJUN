@@ -2,73 +2,88 @@
 
 import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Project } from '@/data/portfolio';
+import type { Project, TechStack } from '@/data/portfolio';
 import { useModalStore } from '@/store/modalStore';
 import SectionHeading from '@/components/ui/SectionHeading';
+import SectionWrapper from '@/components/ui/SectionWrapper';
 import BrutalCard from '@/components/ui/BrutalCard';
 import BrutalButton from '@/components/ui/BrutalButton';
+import { fadeUpVariant, staggerContainerVariant, springBase, springPress } from '@/lib/motion';
 
 // =============================================================
 // ProjectsSection — 프로젝트 카드 그리드 + 상세 모달
-// 카드 클릭 시 모달 오픈 (modalStore 기반)
-// ESC키 + 외부 클릭으로 모달 닫기
 // =============================================================
 
 interface ProjectsSectionProps {
   projects: Project[];
 }
 
-// --------------- 애니메이션 Variants ---------------
+// --------------- TechStack 렌더러 ---------------
 
-const gridContainerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.15,
-    },
-  },
-};
+function TechStackTags({
+  techStack,
+  compact = false,
+}: {
+  techStack: TechStack;
+  /** compact: 카드용 작은 레이블, false: 모달용 */
+  compact?: boolean;
+}) {
+  const labelClass = compact
+    ? 'mb-1 text-[10px] font-bold uppercase tracking-widest'
+    : 'mb-2 text-xs font-bold uppercase tracking-widest';
+  const tagClass = compact ? 'px-2 py-0.5 text-xs font-bold' : 'px-3 py-1 text-xs font-bold';
+  const hasFrontend = techStack.frontend.length > 0;
+  const hasBackend = techStack.backend.length > 0;
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 300,
-      damping: 24,
-    },
-  },
-};
-
-const overlayVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
-const modalVariants = {
-  hidden: { opacity: 0, y: 60, scale: 0.92 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 400,
-      damping: 30,
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: 40,
-    scale: 0.95,
-    transition: { duration: 0.2 },
-  },
-};
+  return (
+    <div className="flex flex-col gap-3">
+      {hasFrontend && (
+        <div>
+          <p className={labelClass} style={{ color: 'var(--color-muted)' }}>
+            Frontend
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {techStack.frontend.map((tech) => (
+              <span
+                key={tech}
+                className={tagClass}
+                style={{
+                  border: 'var(--border-width) solid var(--color-accent)',
+                  color: 'var(--color-accent)',
+                  background: 'var(--color-surface)',
+                }}
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {hasBackend && (
+        <div>
+          <p className={labelClass} style={{ color: 'var(--color-muted)' }}>
+            Backend
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {techStack.backend.map((tech) => (
+              <span
+                key={tech}
+                className={tagClass}
+                style={{
+                  border: 'var(--border-width) solid var(--color-border)',
+                  color: 'var(--color-text)',
+                  background: 'var(--color-surface)',
+                }}
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // --------------- 프로젝트 카드 ---------------
 
@@ -80,7 +95,7 @@ function ProjectCard({
   onOpen: () => void;
 }) {
   return (
-    <motion.div variants={cardVariants}>
+    <motion.div variants={fadeUpVariant}>
       <BrutalCard
         hoverable
         className="flex h-full cursor-pointer flex-col gap-4"
@@ -90,9 +105,7 @@ function ProjectCard({
         <div
           className="flex h-40 items-center justify-center overflow-hidden rounded-[var(--radius)]"
           style={{
-            background: project.thumbnailUrl
-              ? undefined
-              : 'var(--color-accent)',
+            background: project.thumbnailUrl ? undefined : 'var(--color-accent)',
             border: 'var(--border-width) solid var(--color-border)',
           }}
         >
@@ -103,44 +116,23 @@ function ProjectCard({
               className="h-full w-full object-cover"
             />
           ) : (
-            <span
-              className="text-2xl font-black"
-              style={{ color: 'var(--color-bg)' }}
-            >
+            <span className="text-2xl font-black" style={{ color: 'var(--color-bg)' }}>
               {project.title.charAt(0)}
             </span>
           )}
         </div>
 
         {/* 제목 + 설명 */}
-        <h3
-          className="text-xl font-black"
-          style={{ color: 'var(--color-text)' }}
-        >
+        <h3 className="text-xl font-black" style={{ color: 'var(--color-text)' }}>
           {project.title}
         </h3>
-        <p
-          className="line-clamp-2 text-sm leading-relaxed"
-          style={{ color: 'var(--color-muted)' }}
-        >
+        <p className="line-clamp-2 text-sm leading-relaxed" style={{ color: 'var(--color-muted)' }}>
           {project.description}
         </p>
 
         {/* 기술 스택 태그 */}
-        <div className="mt-auto flex flex-wrap gap-2">
-          {project.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="px-2 py-1 text-xs font-bold"
-              style={{
-                border: 'var(--border-width) solid var(--color-accent)',
-                color: 'var(--color-accent)',
-                background: 'var(--color-surface)',
-              }}
-            >
-              {tech}
-            </span>
-          ))}
+        <div className="mt-auto">
+          <TechStackTags techStack={project.techStack} compact />
         </div>
 
         {/* 링크 버튼 */}
@@ -160,7 +152,7 @@ function ProjectCard({
               }}
               whileHover={{ x: 2, y: 2, boxShadow: 'var(--shadow-sm)' }}
               whileTap={{ x: 4, y: 4, boxShadow: '0px 0px 0px transparent' }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              transition={springPress}
             >
               GitHub
             </motion.a>
@@ -180,7 +172,7 @@ function ProjectCard({
               }}
               whileHover={{ x: 2, y: 2, boxShadow: 'var(--shadow-sm)' }}
               whileTap={{ x: 4, y: 4, boxShadow: '0px 0px 0px transparent' }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              transition={springPress}
             >
               Demo
             </motion.a>
@@ -200,7 +192,6 @@ function ProjectModal({
   project: Project;
   onClose: () => void;
 }) {
-  // ESC키로 모달 닫기
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -210,7 +201,6 @@ function ProjectModal({
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
-    // 모달 열릴 때 body 스크롤 방지
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -221,12 +211,11 @@ function ProjectModal({
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      variants={overlayVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
     >
-      {/* 오버레이 배경 — 클릭 시 닫기 */}
+      {/* 오버레이 배경 */}
       <motion.div
         className="absolute inset-0"
         style={{ background: 'rgba(0, 0, 0, 0.8)' }}
@@ -242,10 +231,9 @@ function ProjectModal({
           boxShadow: 'var(--shadow-lg)',
           borderRadius: 'var(--radius)',
         }}
-        variants={modalVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
+        initial={{ opacity: 0, y: 60, scale: 0.92 }}
+        animate={{ opacity: 1, y: 0, scale: 1, transition: { ...springBase, stiffness: 400, damping: 30 } }}
+        exit={{ opacity: 0, y: 40, scale: 0.95, transition: { duration: 0.2 } }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 닫기 버튼 */}
@@ -262,15 +250,10 @@ function ProjectModal({
           X
         </button>
 
-        {/* 프로젝트 제목 */}
-        <h2
-          className="mb-2 text-3xl font-black"
-          style={{ color: 'var(--color-text)' }}
-        >
+        <h2 className="mb-2 text-3xl font-black" style={{ color: 'var(--color-text)' }}>
           {project.title}
         </h2>
 
-        {/* 메타 정보 */}
         <div className="mb-6 flex flex-wrap gap-4 text-sm">
           <span style={{ color: 'var(--color-accent)' }}>
             <strong>역할:</strong> {project.role}
@@ -283,15 +266,10 @@ function ProjectModal({
           </span>
         </div>
 
-        {/* 상세 설명 */}
-        <p
-          className="mb-6 whitespace-pre-line text-base leading-relaxed"
-          style={{ color: 'var(--color-text)' }}
-        >
+        <p className="mb-6 whitespace-pre-line text-base leading-relaxed" style={{ color: 'var(--color-text)' }}>
           {project.longDescription}
         </p>
 
-        {/* 이미지 갤러리 */}
         {project.images.length > 0 && (
           <div className="mb-6 flex flex-col gap-3">
             {project.images.map((img, idx) => (
@@ -313,22 +291,14 @@ function ProjectModal({
           </div>
         )}
 
-        {/* 주요 성과 */}
         {project.highlights.length > 0 && (
           <div className="mb-6">
-            <h3
-              className="mb-3 text-sm font-bold uppercase tracking-widest"
-              style={{ color: 'var(--color-muted)' }}
-            >
+            <h3 className="mb-3 text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--color-muted)' }}>
               Highlights
             </h3>
             <ul className="flex flex-col gap-2">
               {project.highlights.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 text-sm"
-                  style={{ color: 'var(--color-text)' }}
-                >
+                <li key={i} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-text)' }}>
                   <span
                     className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0"
                     style={{ background: 'var(--color-accent)' }}
@@ -341,39 +311,18 @@ function ProjectModal({
           </div>
         )}
 
-        {/* 기술 스택 */}
         <div className="mb-6">
-          <h3
-            className="mb-3 text-sm font-bold uppercase tracking-widest"
-            style={{ color: 'var(--color-muted)' }}
-          >
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--color-muted)' }}>
             Tech Stack
           </h3>
-          <div className="flex flex-wrap gap-2">
-            {project.techStack.map((tech) => (
-              <span
-                key={tech}
-                className="px-3 py-1 text-xs font-bold"
-                style={{
-                  border: 'var(--border-width) solid var(--color-accent)',
-                  color: 'var(--color-accent)',
-                  background: 'var(--color-surface)',
-                }}
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
+          <TechStackTags techStack={project.techStack} />
         </div>
 
-        {/* 외부 링크 */}
         <div className="flex flex-wrap gap-3">
           {project.links.github && (
             <BrutalButton
               variant="secondary"
-              onClick={() =>
-                window.open(project.links.github, '_blank', 'noopener')
-              }
+              onClick={() => window.open(project.links.github, '_blank', 'noopener')}
             >
               GitHub
             </BrutalButton>
@@ -381,9 +330,7 @@ function ProjectModal({
           {project.links.demo && (
             <BrutalButton
               variant="primary"
-              onClick={() =>
-                window.open(project.links.demo, '_blank', 'noopener')
-              }
+              onClick={() => window.open(project.links.demo, '_blank', 'noopener')}
             >
               Live Demo
             </BrutalButton>
@@ -391,9 +338,7 @@ function ProjectModal({
           {project.links.blog && (
             <BrutalButton
               variant="ghost"
-              onClick={() =>
-                window.open(project.links.blog, '_blank', 'noopener')
-              }
+              onClick={() => window.open(project.links.blog, '_blank', 'noopener')}
             >
               Blog
             </BrutalButton>
@@ -411,56 +356,42 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const activeProject = projects.find((p) => p.id === activeProjectId) ?? null;
 
   return (
-    <section
-      id="projects"
-      className="relative px-6 py-24"
-      style={{ background: 'var(--color-bg)' }}
-    >
-      <div className="mx-auto max-w-5xl">
-        <SectionHeading subtitle="Projects">프로젝트</SectionHeading>
+    <SectionWrapper id="projects">
+      <SectionHeading subtitle="Projects">프로젝트</SectionHeading>
 
-        {projects.length > 0 ? (
-          <motion.div
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            variants={gridContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onOpen={() => openModal(project.id)}
-              />
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div
-            className="flex items-center justify-center rounded-[var(--radius)] px-6 py-16"
-            style={{
-              border: 'var(--border-width) dashed var(--color-border)',
-              color: 'var(--color-muted)',
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          >
-            <p className="text-center text-sm">
-              프로젝트를 준비 중입니다. data/portfolio.ts에 projects 데이터를
-              추가하면 여기에 표시됩니다.
-            </p>
-          </motion.div>
-        )}
-      </div>
+      {projects.length > 0 ? (
+        <motion.div
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          variants={staggerContainerVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+        >
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} onOpen={() => openModal(project.id)} />
+          ))}
+        </motion.div>
+      ) : (
+        <motion.div
+          className="flex items-center justify-center rounded-[var(--radius)] px-6 py-16"
+          style={{
+            border: 'var(--border-width) dashed var(--color-border)',
+            color: 'var(--color-muted)',
+          }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={springBase}
+        >
+          <p className="text-center text-sm">
+            프로젝트를 준비 중입니다. data/portfolio.ts에 projects 데이터를 추가하면 여기에 표시됩니다.
+          </p>
+        </motion.div>
+      )}
 
-      {/* 모달 */}
       <AnimatePresence>
-        {activeProject && (
-          <ProjectModal project={activeProject} onClose={closeModal} />
-        )}
+        {activeProject && <ProjectModal project={activeProject} onClose={closeModal} />}
       </AnimatePresence>
-    </section>
+    </SectionWrapper>
   );
 }

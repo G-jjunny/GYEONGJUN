@@ -55,7 +55,7 @@ export default function HeroSection({
       style={{ background: 'var(--color-bg)' }}
     >
       <motion.div
-        className="mx-auto flex max-w-4xl flex-col items-start gap-6"
+        className="mx-auto flex max-w-5xl flex-col items-start gap-6"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
