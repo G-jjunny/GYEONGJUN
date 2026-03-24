@@ -51,3 +51,14 @@ export const staggerContainerVariant = {
     },
   },
 };
+
+/** Hero 섹션 전용 stagger 컨테이너: 더 느린 간격으로 등장 */
+export const heroContainerVariant = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};

@@ -27,11 +27,11 @@ function TagItem({ name, highlighted = false }: SkillTag) {
       className={[
         'inline-flex items-center shrink-0',
         'px-4 py-2 mx-2 font-bold text-sm',
-        'rounded-[var(--radius)]',
-        'border-[length:var(--border-width)] border-solid',
+        'rounded-(--radius)',
+        'border-(length:--border-width) border-solid',
         highlighted
-          ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-bg)]'
-          : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)]',
+          ? 'border-accent bg-accent text-(--color-bg)'
+          : 'border-(--color-border) bg-(--color-surface) text-(--color-text)',
       ].join(' ')}
     >
       {name}

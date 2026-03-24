@@ -1,8 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { THEMES, THEME_COLORS, type Theme } from '@/types/theme';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { THEMES, THEME_COLORS, type Theme } from "@/types/theme";
+import PaletteIcon from "@/components/icons/PaletteIcon";
+import CheckIcon from "@/components/icons/CheckIcon";
+import PlayIcon from "@/components/icons/PlayIcon";
+import { springPress } from "@/lib/motion";
 
 // =============================================================
 // FloatingThemePanel — 화면 우측 중앙 고정 테마 전환 패널
@@ -19,12 +23,6 @@ interface FloatingThemePanelProps {
   onReplayIntro?: () => void;
 }
 
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 500,
-  damping: 30,
-};
-
 export default function FloatingThemePanel({
   theme,
   setTheme,
@@ -35,39 +33,34 @@ export default function FloatingThemePanel({
   return (
     <div
       className="fixed z-50 flex flex-col items-end gap-2"
-      style={{ right: '24px', top: '50%', transform: 'translateY(-50%)' }}
+      style={{ right: "24px", top: "50%", transform: "translateY(-50%)" }}
     >
       {/* 토글 버튼 */}
       <motion.button
         className={[
-          'w-10 h-10 flex items-center justify-center',
-          'rounded-[var(--radius)]',
-          'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
-          'bg-[var(--color-surface)] text-[var(--color-accent)]',
-          'shadow-[var(--shadow-md)]',
-          'cursor-pointer',
-        ].join(' ')}
+          "w-10 h-10 flex items-center justify-center",
+          "rounded-(--radius)",
+          "border-(length:--border-width) border-solid border-accent",
+          "bg-surface text-accent",
+          "shadow-(--shadow-md)",
+          "cursor-pointer",
+        ].join(" ")}
         onClick={() => setIsOpen((prev) => !prev)}
-        whileHover={{ x: 2, y: 2, boxShadow: 'var(--shadow-sm)', transition: springTransition }}
-        whileTap={{ x: 4, y: 4, boxShadow: '0px 0px 0px transparent', transition: springTransition }}
-        aria-label={isOpen ? '테마 패널 닫기' : '테마 패널 열기'}
+        whileHover={{
+          x: 2,
+          y: 2,
+          boxShadow: "var(--shadow-sm)",
+          transition: springPress,
+        }}
+        whileTap={{
+          x: 4,
+          y: 4,
+          boxShadow: "0px 0px 0px transparent",
+          transition: springPress,
+        }}
+        aria-label={isOpen ? "테마 패널 닫기" : "테마 패널 열기"}
       >
-        {/* 팔레트 아이콘 (SVG) */}
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="8" r="1.5" fill="currentColor" />
-          <circle cx="8" cy="12" r="1.5" fill="currentColor" />
-          <circle cx="15" cy="14" r="1.5" fill="currentColor" />
-        </svg>
+        <PaletteIcon />
       </motion.button>
 
       {/* 테마 버튼 패널 */}
@@ -75,16 +68,16 @@ export default function FloatingThemePanel({
         {isOpen && (
           <motion.div
             className={[
-              'flex flex-col gap-2 p-2',
-              'rounded-[var(--radius)]',
-              'border-[length:var(--border-width)] border-solid border-[var(--color-border)]',
-              'bg-[var(--color-surface)]',
-              'shadow-[var(--shadow-md)]',
-            ].join(' ')}
+              "flex flex-col gap-2 p-2",
+              "rounded-(--radius)",
+              "border-(length:--border-width) border-solid border-(--color-border)",
+              "bg-(--color-surface)",
+              "shadow-(--shadow-md)",
+            ].join(" ")}
             initial={{ opacity: 0, scale: 0.8, x: 20 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: 20 }}
-            transition={springTransition}
+            transition={springPress}
           >
             {THEMES.map((themeId) => {
               const isActive = theme === themeId;
@@ -92,39 +85,24 @@ export default function FloatingThemePanel({
                 <motion.button
                   key={themeId}
                   className={[
-                    'w-6 h-6 rounded-[var(--radius)] cursor-pointer',
-                    'border-[length:var(--border-width)] border-solid',
+                    "w-6 h-6 rounded-(--radius) cursor-pointer",
+                    "border-(length:--border-width) border-solid",
                     isActive
-                      ? 'border-[var(--color-accent)]'
-                      : 'border-[var(--color-border)]',
-                  ].join(' ')}
+                      ? "border-accent"
+                      : "border-(--color-border)",
+                  ].join(" ")}
                   style={{
                     backgroundColor: THEME_COLORS[themeId],
-                    boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
+                    boxShadow: isActive ? "var(--shadow-sm)" : "none",
                   }}
                   onClick={() => setTheme(themeId)}
-                  whileHover={{ x: 2, y: 2, transition: springTransition }}
-                  whileTap={{ x: 3, y: 3, transition: springTransition }}
+                  whileHover={{ x: 2, y: 2, transition: springPress }}
+                  whileTap={{ x: 3, y: 3, transition: springPress }}
                   aria-label={`${themeId} 테마 선택`}
                   title={themeId}
                 >
                   {/* 선택된 테마 체크 표시 */}
-                  {isActive && (
-                    <motion.svg
-                      className="w-full h-full p-0.5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="var(--color-bg)"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={springTransition}
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </motion.svg>
-                  )}
+                  {isActive && <CheckIcon springTransition={springPress} />}
                 </motion.button>
               );
             })}
@@ -134,39 +112,30 @@ export default function FloatingThemePanel({
               <>
                 <div
                   style={{
-                    borderTop: 'var(--border-width) solid var(--color-border)',
-                    margin: '2px 0',
+                    borderTop: "var(--border-width) solid var(--color-border)",
+                    margin: "2px 0",
                   }}
                 />
                 <motion.button
                   className={[
-                    'w-6 h-6 flex items-center justify-center',
-                    'rounded-[var(--radius)] cursor-pointer',
-                    'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
-                  ].join(' ')}
+                    "w-6 h-6 flex items-center justify-center",
+                    "rounded-(--radius) cursor-pointer",
+                    "border-(length:--border-width) border-solid border-accent",
+                  ].join(" ")}
                   style={{
-                    background: 'var(--color-surface)',
-                    color: 'var(--color-accent)',
+                    background: "var(--color-surface)",
+                    color: "var(--color-accent)",
                   }}
                   onClick={() => {
                     onReplayIntro();
                     setIsOpen(false);
                   }}
-                  whileHover={{ x: 2, y: 2, transition: springTransition }}
-                  whileTap={{ x: 3, y: 3, transition: springTransition }}
+                  whileHover={{ x: 2, y: 2, transition: springPress }}
+                  whileTap={{ x: 3, y: 3, transition: springPress }}
                   aria-label="인트로 다시보기"
                   title="인트로 다시보기"
                 >
-                  {/* 재생 아이콘 */}
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <polygon points="5 3 19 12 5 21 5 3" />
-                  </svg>
+                  <PlayIcon />
                 </motion.button>
               </>
             )}

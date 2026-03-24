@@ -6,6 +6,7 @@ import Image from "next/image";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import SkillMarquee from "@/components/ui/SkillMarquee";
+import EmptyPlaceholder from "@/components/ui/EmptyPlaceholder";
 import { springBase } from "@/lib/motion";
 
 // =============================================================
@@ -19,14 +20,18 @@ interface AboutSectionProps {
   name?: string;
 }
 
-export default function AboutSection({ bio, skills, avatarUrl, name }: AboutSectionProps) {
+export default function AboutSection({
+  bio,
+  skills,
+  avatarUrl,
+  name,
+}: AboutSectionProps) {
   const displayBio = bio || "자기소개를 입력하세요.";
   const initial = name ? name.charAt(0) : "?";
 
-
   const skillTags = skills.map((s) => ({
     name: s.name,
-    highlighted: s.level >= 4,
+    // highlighted: s.level >= 4,
   }));
 
   const mid = Math.ceil(skillTags.length / 2);
@@ -45,19 +50,23 @@ export default function AboutSection({ bio, skills, avatarUrl, name }: AboutSect
         viewport={{ once: true, margin: "-80px" }}
         variants={{
           hidden: { opacity: 0, y: 30 },
-          visible: { opacity: 1, y: 0, transition: { ...springBase, delay: 0.2 } },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { ...springBase, delay: 0.2 },
+          },
         }}
       >
         {/* 프로필 이미지 */}
         <div
           className="shrink-0"
           style={{
-            width: 'clamp(120px, 18vw, 200px)',
-            height: 'clamp(120px, 18vw, 200px)',
-            border: 'var(--border-width) solid var(--color-accent)',
-            boxShadow: 'var(--shadow-lg)',
-            overflow: 'hidden',
-            position: 'relative',
+            width: "clamp(120px, 18vw, 200px)",
+            height: "clamp(120px, 18vw, 200px)",
+            border: "var(--border-width) solid var(--color-accent)",
+            boxShadow: "var(--shadow-lg)",
+            overflow: "hidden",
+            position: "relative",
           }}
         >
           {avatarUrl ? (
@@ -65,7 +74,7 @@ export default function AboutSection({ bio, skills, avatarUrl, name }: AboutSect
               src={avatarUrl}
               alt={name ?? "프로필 이미지"}
               fill
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: "cover" }}
               sizes="200px"
             />
           ) : (
@@ -73,8 +82,8 @@ export default function AboutSection({ bio, skills, avatarUrl, name }: AboutSect
             <div
               className="flex h-full w-full items-center justify-center text-5xl font-black"
               style={{
-                background: 'var(--color-surface)',
-                color: 'var(--color-accent)',
+                background: "var(--color-surface)",
+                color: "var(--color-accent)",
               }}
             >
               {initial}
@@ -107,26 +116,14 @@ export default function AboutSection({ bio, skills, avatarUrl, name }: AboutSect
             Tech Stack
           </h3>
           <SkillMarquee skills={row1} duration={35} />
-          {row2.length > 0 && <SkillMarquee skills={row2} duration={30} reverse />}
+          {row2.length > 0 && (
+            <SkillMarquee skills={row2} duration={30} reverse />
+          )}
         </motion.div>
       )}
 
       {skillTags.length === 0 && (
-        <motion.div
-          className="flex items-center justify-center rounded-[var(--radius)] px-6 py-12"
-          style={{
-            border: "var(--border-width) dashed var(--color-border)",
-            color: "var(--color-muted)",
-          }}
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={springBase}
-        >
-          <p className="text-center text-sm">
-            data/portfolio.ts에 skills 데이터를 추가하면 여기에 표시됩니다.
-          </p>
-        </motion.div>
+        <EmptyPlaceholder text="data/portfolio.ts에 skills 데이터를 추가하면 여기에 표시됩니다." />
       )}
     </SectionWrapper>
   );

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import type { PersonalInfo } from '@/data/portfolio';
 import BrutalButton from '@/components/ui/BrutalButton';
+import { heroContainerVariant, fadeUpVariant } from '@/lib/motion';
 
 // =============================================================
 // HeroSection — 포트폴리오 메인 히어로 섹션
@@ -15,29 +16,6 @@ interface HeroSectionProps {
   onProjectsClick?: () => void;
   onContactClick?: () => void;
 }
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 300,
-      damping: 24,
-    },
-  },
-};
 
 export default function HeroSection({
   personal,
@@ -56,7 +34,7 @@ export default function HeroSection({
     >
       <motion.div
         className="mx-auto flex max-w-5xl flex-col items-start gap-6"
-        variants={containerVariants}
+        variants={heroContainerVariant}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
@@ -65,7 +43,7 @@ export default function HeroSection({
         <motion.h1
           className="text-5xl font-black leading-tight tracking-tighter sm:text-7xl md:text-8xl"
           style={{ color: 'var(--color-text)' }}
-          variants={itemVariants}
+          variants={fadeUpVariant}
         >
           {displayName.split('').map((char, i) => (
             <span
@@ -83,7 +61,7 @@ export default function HeroSection({
         <motion.p
           className="text-2xl font-bold sm:text-3xl md:text-4xl"
           style={{ color: 'var(--color-accent)' }}
-          variants={itemVariants}
+          variants={fadeUpVariant}
         >
           {displayTitle}
         </motion.p>
@@ -93,7 +71,7 @@ export default function HeroSection({
           <motion.p
             className="max-w-2xl text-lg leading-relaxed sm:text-xl"
             style={{ color: 'var(--color-muted)' }}
-            variants={itemVariants}
+            variants={fadeUpVariant}
           >
             {displaySubtitle}
           </motion.p>
@@ -102,7 +80,7 @@ export default function HeroSection({
         {/* CTA 버튼 */}
         <motion.div
           className="mt-4 flex flex-wrap gap-4"
-          variants={itemVariants}
+          variants={fadeUpVariant}
         >
           <BrutalButton
             variant="primary"
@@ -126,7 +104,7 @@ export default function HeroSection({
             border: 'var(--border-width) solid var(--color-border)',
             boxShadow: 'var(--shadow-lg)',
           }}
-          variants={itemVariants}
+          variants={fadeUpVariant}
           aria-hidden="true"
         />
       </motion.div>

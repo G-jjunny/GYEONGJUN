@@ -20,18 +20,18 @@ interface BrutalButtonProps
 
 const variantStyles: Record<Variant, string> = {
   primary: [
-    'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
-    'bg-[var(--color-accent)] text-[var(--color-bg)]',
-    'shadow-[var(--shadow-md)]',
+    'border-(length:--border-width) border-solid border-accent',
+    'bg-accent text-(--color-bg)',
+    'shadow-(--shadow-md)',
   ].join(' '),
   secondary: [
-    'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
-    'bg-[var(--color-surface)] text-[var(--color-accent)]',
-    'shadow-[var(--shadow-md)]',
+    'border-(length:--border-width) border-solid border-accent',
+    'bg-surface text-accent',
+    'shadow-(--shadow-md)',
   ].join(' '),
   ghost: [
-    'border-[length:var(--border-width)] border-solid border-[var(--color-border)]',
-    'bg-transparent text-[var(--color-text)]',
+    'border-(length:--border-width) border-solid border-(--color-border)',
+    'bg-transparent text-(--color-text)',
     'shadow-none',
   ].join(' '),
 };
@@ -44,7 +44,7 @@ const BrutalButton = forwardRef<HTMLButtonElement, BrutalButtonProps>(
         className={[
           'inline-flex items-center justify-center',
           'px-6 py-3 font-bold cursor-pointer',
-          'rounded-[var(--radius)]',
+          'rounded-(--radius)',
           variantStyles[variant],
           className,
         ].join(' ')}

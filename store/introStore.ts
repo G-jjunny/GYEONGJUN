@@ -21,7 +21,9 @@ export const useIntroStore = create<IntroStore>((set) => ({
   replayCount: 0,
   markComplete: () => set({ isComplete: true }),
   replay: () => {
-    sessionStorage.removeItem('intro-shown');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('intro-shown');
+    }
     set((s) => ({ replayCount: s.replayCount + 1, isComplete: false }));
   },
 }));

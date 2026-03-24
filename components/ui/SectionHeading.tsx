@@ -31,7 +31,7 @@ export default function SectionHeading({
       <h2
         className={[
           'text-4xl md:text-5xl font-black tracking-tight',
-          'text-[var(--color-text)]',
+          'text-(--color-text)',
           'relative inline-block',
         ].join(' ')}
       >
@@ -40,14 +40,14 @@ export default function SectionHeading({
         <span
           className={[
             'absolute left-0 -bottom-2 h-[4px] w-full',
-            'bg-[var(--color-accent)]',
+            'bg-accent',
           ].join(' ')}
           aria-hidden="true"
         />
       </h2>
 
       {subtitle && (
-        <p className="mt-4 text-lg text-[var(--color-text-muted)]">
+        <p className="mt-4 text-lg text-(--color-muted)">
           {subtitle}
         </p>
       )}
