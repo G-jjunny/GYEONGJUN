@@ -25,6 +25,7 @@ export default function Home() {
           skills={portfolioData.skills}
           avatarUrl={portfolioData.personal.avatarUrl}
           name={portfolioData.personal.name}
+          title={portfolioData.personal.title}
         />
         <ProjectsSection projects={portfolioData.projects} />
         <ExperienceSection
