@@ -61,8 +61,7 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
   if (phase === "init") {
     return (
       <div
-        className="fixed inset-0 z-200"
-        style={{ background: "var(--color-bg)" }}
+        className="fixed inset-0 z-200 bg-(--color-bg)"
       />
     );
   }
@@ -72,8 +71,7 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
     <AnimatePresence>
       {phase === "playing" && (
         <motion.div
-          className="fixed inset-0 z-200 flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: "var(--color-bg)" }}
+          className="fixed inset-0 z-200 flex flex-col items-center justify-center overflow-hidden bg-(--color-bg)"
           exit={{
             y: "-100%",
             transition: { duration: EXIT_DURATION / 1000, ease: CURTAIN_EASE },
@@ -87,17 +85,12 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
             {/* 이름 — offset shadow + stamp 효과 */}
             <div className="relative inline-block">
               {/* offset shadow 레이어 */}
+              {/* fontSize clamp() 동적 반응형 값이므로 인라인 유지, 나머지는 className으로 */}
               <motion.span
                 aria-hidden="true"
-                className="absolute select-none font-black leading-none tracking-tighter"
+                className="absolute select-none font-black leading-none tracking-tighter top-2 left-2 opacity-30 whitespace-nowrap pointer-events-none text-(--color-border)"
                 style={{
                   fontSize: "clamp(3.5rem, 13vw, 10rem)",
-                  color: "var(--color-border)",
-                  top: 8,
-                  left: 8,
-                  opacity: 0.3,
-                  whiteSpace: "nowrap",
-                  pointerEvents: "none",
                 }}
                 initial={{ y: -80, opacity: 0, scale: 1.25 }}
                 animate={{ y: 8, opacity: 0.3, scale: 1 }}
@@ -112,12 +105,11 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
               </motion.span>
 
               {/* 실제 이름 텍스트 */}
+              {/* fontSize clamp() 동적 반응형 값이므로 인라인 유지 */}
               <motion.h1
-                className="relative select-none font-black leading-none tracking-tighter"
+                className="relative select-none font-black leading-none tracking-tighter text-(--color-accent) whitespace-nowrap"
                 style={{
                   fontSize: "clamp(3.5rem, 13vw, 10rem)",
-                  color: "var(--color-accent)",
-                  whiteSpace: "nowrap",
                 }}
                 initial={{ y: -80, opacity: 0, scale: 1.25 }}
                 animate={{ y: 0, opacity: 1, scale: 1 }}
@@ -134,23 +126,18 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
 
             {/* accent 라인 */}
             <motion.div
-              className="mx-auto mt-3 h-1.25"
-              style={{
-                background: "var(--color-accent)",
-                transformOrigin: "left center",
-                width: "100%",
-              }}
+              className="mx-auto mt-3 h-1.25 w-full bg-(--color-accent) origin-left"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.45, delay: 0.55, ease: "easeOut" }}
             />
 
             {/* 직함 */}
+            {/* fontSize clamp() 동적 반응형 값이므로 인라인 유지 */}
             <motion.p
-              className="mt-5 font-bold uppercase tracking-[0.4em]"
+              className="mt-5 font-bold uppercase tracking-[0.4em] text-(--color-muted)"
               style={{
                 fontSize: "clamp(0.7rem, 1.4vw, 0.9rem)",
-                color: "var(--color-muted)",
               }}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -162,11 +149,7 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
 
           {/* 하단 진행 바 */}
           <motion.div
-            className="absolute bottom-0 left-0 h-0.75 w-full"
-            style={{
-              background: "var(--color-accent)",
-              transformOrigin: "left center",
-            }}
+            className="absolute bottom-0 left-0 h-0.75 w-full bg-(--color-accent) origin-left"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: SHOW_DURATION / 1000, ease: "linear" }}
@@ -183,13 +166,12 @@ function DecoBlocks() {
   return (
     <>
       {/* 우상단 — accent 블록 */}
+      {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
       <motion.div
-        className="absolute right-[8%] top-[12%]"
+        className="absolute right-[8%] top-[12%] bg-(--color-accent) border-(length:--border-width) border-solid border-(--color-border)"
         style={{
           width: "clamp(56px, 7vw, 110px)",
           height: "clamp(56px, 7vw, 110px)",
-          background: "var(--color-accent)",
-          border: "var(--border-width) solid var(--color-border)",
         }}
         initial={{ scale: 0, rotate: 14 }}
         animate={{ scale: 1, rotate: 14 }}
@@ -202,13 +184,12 @@ function DecoBlocks() {
       />
 
       {/* 좌하단 — outline 블록 */}
+      {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
       <motion.div
-        className="absolute bottom-[18%] left-[7%]"
+        className="absolute bottom-[18%] left-[7%] bg-transparent border-(length:--border-width) border-solid border-(--color-accent)"
         style={{
           width: "clamp(36px, 4.5vw, 72px)",
           height: "clamp(36px, 4.5vw, 72px)",
-          background: "transparent",
-          border: "var(--border-width) solid var(--color-accent)",
         }}
         initial={{ scale: 0, rotate: -10 }}
         animate={{ scale: 1, rotate: -10 }}
@@ -221,25 +202,23 @@ function DecoBlocks() {
       />
 
       {/* 좌상단 — ㄱ자 브라켓 */}
+      {/* width는 clamp() 동적 반응형 값이므로 인라인 유지, height는 CSS 변수 토큰 */}
       <motion.div
-        className="absolute left-[7%] top-[18%]"
+        className="absolute left-[7%] top-[18%] bg-(--color-muted) origin-left"
         style={{
           width: "clamp(40px, 5vw, 72px)",
           height: "var(--border-width)",
-          background: "var(--color-muted)",
-          transformOrigin: "left center",
         }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.35, delay: 0.5, ease: "easeOut" }}
       />
+      {/* height는 clamp() 동적 반응형 값이므로 인라인 유지, width는 CSS 변수 토큰 */}
       <motion.div
-        className="absolute left-[7%] top-[18%]"
+        className="absolute left-[7%] top-[18%] bg-(--color-muted) origin-top"
         style={{
           width: "var(--border-width)",
           height: "clamp(40px, 5vw, 72px)",
-          background: "var(--color-muted)",
-          transformOrigin: "top center",
         }}
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
@@ -247,12 +226,12 @@ function DecoBlocks() {
       />
 
       {/* 우하단 — accent 점 */}
+      {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
       <motion.div
-        className="absolute bottom-[22%] right-[9%]"
+        className="absolute bottom-[22%] right-[9%] bg-(--color-accent)"
         style={{
           width: "clamp(10px, 1.4vw, 16px)",
           height: "clamp(10px, 1.4vw, 16px)",
-          background: "var(--color-accent)",
         }}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}

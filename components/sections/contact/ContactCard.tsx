@@ -26,25 +26,18 @@ export default function ContactCard({ item }: ContactCardProps) {
     <BrutalCard hoverable={!!item.href} className="cursor-pointer">
       <div className="flex items-center gap-4">
         <div
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-(--radius)"
-          style={{
-            background: 'var(--color-surface)',
-            color: 'var(--color-accent)',
-            border: 'var(--border-width) solid var(--color-accent)',
-          }}
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-(--radius) bg-(--color-surface) text-(--color-accent) border-(length:--border-width) border-solid border-(--color-accent)"
         >
           {item.icon}
         </div>
         <div className="min-w-0 flex-1">
           <p
-            className="text-xs font-bold uppercase tracking-wider"
-            style={{ color: 'var(--color-muted)' }}
+            className="text-xs font-bold uppercase tracking-wider text-(--color-muted)"
           >
             {item.label}
           </p>
           <p
-            className="truncate text-sm font-semibold"
-            style={{ color: 'var(--color-text)' }}
+            className="truncate text-sm font-semibold text-(--color-text)"
           >
             {item.value}
           </p>

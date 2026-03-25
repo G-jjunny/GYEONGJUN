@@ -32,8 +32,7 @@ export default function FloatingThemePanel({
 
   return (
     <div
-      className="fixed z-50 flex flex-col items-end gap-2"
-      style={{ right: "24px", top: "50%", transform: "translateY(-50%)" }}
+      className="fixed z-50 flex flex-col items-end gap-2 right-6 top-1/2 -translate-y-1/2"
     >
       {/* 토글 버튼 */}
       <motion.button
@@ -111,21 +110,15 @@ export default function FloatingThemePanel({
             {onReplayIntro && (
               <>
                 <div
-                  style={{
-                    borderTop: "var(--border-width) solid var(--color-border)",
-                    margin: "2px 0",
-                  }}
+                  className="border-t-(length:--border-width) border-solid border-t-(--color-border) my-0.5"
                 />
                 <motion.button
                   className={[
                     "w-6 h-6 flex items-center justify-center",
                     "rounded-(--radius) cursor-pointer",
                     "border-(length:--border-width) border-solid border-accent",
+                    "bg-(--color-surface) text-(--color-accent)",
                   ].join(" ")}
-                  style={{
-                    background: "var(--color-surface)",
-                    color: "var(--color-accent)",
-                  }}
                   onClick={() => {
                     onReplayIntro();
                     setIsOpen(false);

@@ -5,8 +5,16 @@ import type { ContactInfo, PersonalInfo } from "@/data/portfolio";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import EmptyPlaceholder from "@/components/ui/EmptyPlaceholder";
-import ContactCard, { type ContactItem } from "@/components/sections/contact/ContactCard";
-import { EmailIcon, GithubIcon, LinkedinIcon, BlogIcon, PhoneIcon } from "@/components/icons";
+import ContactCard, {
+  type ContactItem,
+} from "@/components/sections/contact/ContactCard";
+import {
+  EmailIcon,
+  GithubIcon,
+  LinkedinIcon,
+  BlogIcon,
+  PhoneIcon,
+} from "@/components/icons";
 import {
   fadeUpVariant,
   staggerContainerVariant,
@@ -88,7 +96,7 @@ export default function ContactSection({
 
   return (
     <SectionWrapper id="contact">
-      <SectionHeading subtitle="Get in Touch">연락하기</SectionHeading>
+      <SectionHeading subtitle="Contact">연락하기</SectionHeading>
 
       {items.length > 0 ? (
         <motion.div
@@ -117,21 +125,18 @@ export default function ContactSection({
         transition={{ ...springBase, delay: 0.3 }}
       >
         <p
-          className="text-lg font-medium"
-          style={{ color: "var(--color-muted)" }}
+          className="text-lg font-medium text-(--color-muted)"
         >
           감사합니다
         </p>
         <h3
-          className="mt-3 text-3xl font-black md:text-4xl"
-          style={{ color: "var(--color-text)" }}
+          className="mt-3 text-3xl font-black md:text-4xl text-(--color-text)"
         >
           {displayName}
-          <span style={{ color: "var(--color-accent)" }}>과 함께 만들어요</span>
+          <span className="text-(--color-accent)">과 함께 만들어요</span>
         </h3>
         <div
-          className="mx-auto mt-6 h-1 w-20"
-          style={{ background: "var(--color-accent)" }}
+          className="mx-auto mt-6 h-1 w-20 bg-(--color-accent)"
           aria-hidden="true"
         />
       </motion.div>

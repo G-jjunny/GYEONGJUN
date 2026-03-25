@@ -31,8 +31,7 @@ export default function ExperienceSection({
         {/* ---- Education 열 ---- */}
         <div>
           <h3
-            className="mb-6 text-sm font-bold uppercase tracking-widest"
-            style={{ color: "var(--color-muted)" }}
+            className="mb-6 text-sm font-bold uppercase tracking-widest text-(--color-muted)"
           >
             Education
           </h3>
@@ -49,27 +48,23 @@ export default function ExperienceSection({
                 <motion.div key={idx} variants={fadeUpVariant}>
                   <BrutalCard>
                     <p
-                      className="mb-1 text-xs font-bold uppercase tracking-wider"
-                      style={{ color: "var(--color-accent)" }}
+                      className="mb-1 text-xs font-bold uppercase tracking-wider text-(--color-accent)"
                     >
                       {edu.period}
                     </p>
                     <h4
-                      className="text-lg font-black"
-                      style={{ color: "var(--color-text)" }}
+                      className="text-lg font-black text-(--color-text)"
                     >
                       {edu.institution}
                     </h4>
                     <p
-                      className="text-sm font-semibold"
-                      style={{ color: "var(--color-text)" }}
+                      className="text-sm font-semibold text-(--color-text)"
                     >
                       {edu.degree} · {edu.field}
                     </p>
                     {edu.description && (
                       <p
-                        className="mt-2 text-sm leading-relaxed"
-                        style={{ color: "var(--color-muted)" }}
+                        className="mt-2 text-sm leading-relaxed text-(--color-muted)"
                       >
                         {edu.description}
                       </p>
@@ -89,8 +84,7 @@ export default function ExperienceSection({
         {/* ---- Experience 열 ---- */}
         <div>
           <h3
-            className="mb-6 text-sm font-bold uppercase tracking-widest"
-            style={{ color: "var(--color-muted)" }}
+            className="mb-6 text-sm font-bold uppercase tracking-widest text-(--color-muted)"
           >
             Experience
           </h3>
@@ -107,26 +101,22 @@ export default function ExperienceSection({
                 <motion.div key={idx} variants={fadeUpVariant}>
                   <BrutalCard accent>
                     <p
-                      className="mb-1 text-xs font-bold uppercase tracking-wider"
-                      style={{ color: "var(--color-accent)" }}
+                      className="mb-1 text-xs font-bold uppercase tracking-wider text-(--color-accent)"
                     >
                       {exp.period}
                     </p>
                     <h4
-                      className="text-lg font-black"
-                      style={{ color: "var(--color-text)" }}
+                      className="text-lg font-black text-(--color-text)"
                     >
                       {exp.company}
                     </h4>
                     <p
-                      className="mb-3 text-sm font-semibold"
-                      style={{ color: "var(--color-text)" }}
+                      className="mb-3 text-sm font-semibold text-(--color-text)"
                     >
                       {exp.position}
                     </p>
                     <p
-                      className="mb-3 text-sm leading-relaxed"
-                      style={{ color: "var(--color-muted)" }}
+                      className="mb-3 text-sm leading-relaxed text-(--color-muted)"
                     >
                       {exp.description}
                     </p>
@@ -136,12 +126,10 @@ export default function ExperienceSection({
                         {exp.achievements.map((item, i) => (
                           <li
                             key={i}
-                            className="flex items-start gap-2 text-sm"
-                            style={{ color: "var(--color-text)" }}
+                            className="flex items-start gap-2 text-sm text-(--color-text)"
                           >
                             <span
-                              className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0"
-                              style={{ background: "var(--color-accent)" }}
+                              className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 bg-(--color-accent)"
                               aria-hidden="true"
                             />
                             {item}

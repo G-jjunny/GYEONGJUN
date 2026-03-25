@@ -58,15 +58,12 @@ export default function AboutSection({
         }}
       >
         {/* 프로필 이미지 */}
+        {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
         <div
-          className="shrink-0"
+          className="relative shrink-0 overflow-hidden border-(length:--border-width) border-solid border-(--color-accent) shadow-(--shadow-lg)"
           style={{
             width: "clamp(120px, 18vw, 200px)",
             height: "clamp(120px, 18vw, 200px)",
-            border: "var(--border-width) solid var(--color-accent)",
-            boxShadow: "var(--shadow-lg)",
-            overflow: "hidden",
-            position: "relative",
           }}
         >
           {avatarUrl ? (
@@ -74,17 +71,13 @@ export default function AboutSection({
               src={avatarUrl}
               alt={name ?? "프로필 이미지"}
               fill
-              style={{ objectFit: "cover" }}
+              className="object-cover"
               sizes="200px"
             />
           ) : (
             // 이미지 없을 때 이니셜 플레이스홀더
             <div
-              className="flex h-full w-full items-center justify-center text-5xl font-black"
-              style={{
-                background: "var(--color-surface)",
-                color: "var(--color-accent)",
-              }}
+              className="flex h-full w-full items-center justify-center text-5xl font-black bg-(--color-surface) text-(--color-accent)"
             >
               {initial}
             </div>
@@ -93,8 +86,7 @@ export default function AboutSection({
 
         {/* Bio 텍스트 */}
         <p
-          className="whitespace-pre-line text-lg leading-relaxed sm:text-xl"
-          style={{ color: "var(--color-text)" }}
+          className="whitespace-pre-line text-lg leading-relaxed sm:text-xl text-(--color-text)"
         >
           {displayBio}
         </p>
@@ -110,8 +102,7 @@ export default function AboutSection({
           transition={{ ...springBase, delay: 0.3 }}
         >
           <h3
-            className="mb-2 text-sm font-bold uppercase tracking-widest"
-            style={{ color: "var(--color-muted)" }}
+            className="mb-2 text-sm font-bold uppercase tracking-widest text-(--color-muted)"
           >
             Tech Stack
           </h3>

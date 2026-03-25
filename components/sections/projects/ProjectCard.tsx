@@ -26,13 +26,11 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
         onClick={onOpen}
       >
         {/* 썸네일 / 플레이스홀더 */}
+        {/* 썸네일 없을 때만 accent 배경 적용 — 조건부이므로 인라인 유지 */}
         <div
-          className="relative flex h-40 items-center justify-center overflow-hidden rounded-(--radius)"
+          className="relative flex h-40 items-center justify-center overflow-hidden rounded-(--radius) border-(length:--border-width) border-solid border-(--color-border)"
           style={{
-            background: project.thumbnailUrl
-              ? undefined
-              : "var(--color-accent)",
-            border: "var(--border-width) solid var(--color-border)",
+            background: project.thumbnailUrl ? undefined : "var(--color-accent)",
           }}
         >
           {project.thumbnailUrl ? (
@@ -45,8 +43,7 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
             />
           ) : (
             <span
-              className="text-2xl font-black"
-              style={{ color: "var(--color-bg)" }}
+              className="text-2xl font-black text-(--color-bg)"
             >
               {project.title.charAt(0)}
             </span>
@@ -55,14 +52,12 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
         {/* 제목 + 설명 */}
         <h3
-          className="text-xl font-black"
-          style={{ color: "var(--color-text)" }}
+          className="text-xl font-black text-(--color-text)"
         >
           {project.title}
         </h3>
         <p
-          className="line-clamp-2 text-sm leading-relaxed"
-          style={{ color: "var(--color-muted)" }}
+          className="line-clamp-2 text-sm leading-relaxed text-(--color-muted)"
         >
           {project.description}
         </p>
@@ -80,13 +75,7 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="px-3 py-1 text-xs font-bold"
-              style={{
-                border: "var(--border-width) solid var(--color-border)",
-                color: "var(--color-text)",
-                boxShadow: "var(--shadow-sm)",
-                display: "inline-block",
-              }}
+              className="inline-block px-3 py-1 text-xs font-bold border-(length:--border-width) border-solid border-(--color-border) text-(--color-text) shadow-(--shadow-sm)"
               whileHover={{ x: 2, y: 2, boxShadow: "var(--shadow-sm)" }}
               whileTap={{ x: 4, y: 4, boxShadow: "0px 0px 0px transparent" }}
               transition={springPress}
@@ -100,13 +89,7 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="px-3 py-1 text-xs font-bold"
-              style={{
-                border: "var(--border-width) solid var(--color-border)",
-                color: "var(--color-text)",
-                boxShadow: "var(--shadow-sm)",
-                display: "inline-block",
-              }}
+              className="inline-block px-3 py-1 text-xs font-bold border-(length:--border-width) border-solid border-(--color-border) text-(--color-text) shadow-(--shadow-sm)"
               whileHover={{ x: 2, y: 2, boxShadow: "var(--shadow-sm)" }}
               whileTap={{ x: 4, y: 4, boxShadow: "0px 0px 0px transparent" }}
               transition={springPress}

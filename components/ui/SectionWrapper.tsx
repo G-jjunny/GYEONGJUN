@@ -23,8 +23,7 @@ export default function SectionWrapper({
   return (
     <section
       id={id}
-      className={`relative px-6 py-24 ${className}`}
-      style={{ background: 'var(--color-bg)' }}
+      className={`relative px-6 py-24 bg-(--color-bg) ${className}`}
     >
       <div className="mx-auto max-w-5xl">{children}</div>
     </section>

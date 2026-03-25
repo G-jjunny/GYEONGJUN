@@ -29,8 +29,7 @@ export default function HeroSection({
   return (
     <section
       id="hero"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-20"
-      style={{ background: 'var(--color-bg)' }}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-20 bg-(--color-bg)"
     >
       <motion.div
         className="mx-auto flex max-w-5xl flex-col items-start gap-6"
@@ -41,8 +40,7 @@ export default function HeroSection({
       >
         {/* 이름 — 대형 타이포, accent 강조 */}
         <motion.h1
-          className="text-5xl font-black leading-tight tracking-tighter sm:text-7xl md:text-8xl"
-          style={{ color: 'var(--color-text)' }}
+          className="text-5xl font-black leading-tight tracking-tighter sm:text-7xl md:text-8xl text-(--color-text)"
           variants={fadeUpVariant}
         >
           {displayName.split('').map((char, i) => (
@@ -59,8 +57,7 @@ export default function HeroSection({
 
         {/* 직함 */}
         <motion.p
-          className="text-2xl font-bold sm:text-3xl md:text-4xl"
-          style={{ color: 'var(--color-accent)' }}
+          className="text-2xl font-bold sm:text-3xl md:text-4xl text-(--color-accent)"
           variants={fadeUpVariant}
         >
           {displayTitle}
@@ -69,8 +66,7 @@ export default function HeroSection({
         {/* 한 줄 소개 */}
         {displaySubtitle && (
           <motion.p
-            className="max-w-2xl text-lg leading-relaxed sm:text-xl"
-            style={{ color: 'var(--color-muted)' }}
+            className="max-w-2xl text-lg leading-relaxed sm:text-xl text-(--color-muted)"
             variants={fadeUpVariant}
           >
             {displaySubtitle}
@@ -98,12 +94,7 @@ export default function HeroSection({
 
         {/* 장식 — 브루탈리즘 accent 블록 */}
         <motion.div
-          className="absolute -bottom-6 right-8 hidden h-24 w-24 md:block"
-          style={{
-            background: 'var(--color-accent)',
-            border: 'var(--border-width) solid var(--color-border)',
-            boxShadow: 'var(--shadow-lg)',
-          }}
+          className="absolute -bottom-6 right-8 hidden h-24 w-24 md:block bg-(--color-accent) border-(length:--border-width) border-solid border-(--color-border) shadow-(--shadow-lg)"
           variants={fadeUpVariant}
           aria-hidden="true"
         />

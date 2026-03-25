@@ -26,19 +26,14 @@ export default function TechStackTags({
     <div className="flex flex-col gap-3">
       {hasFrontend && (
         <div>
-          <p className={labelClass} style={{ color: 'var(--color-muted)' }}>
+          <p className={`${labelClass} text-(--color-muted)`}>
             Frontend
           </p>
           <div className="flex flex-wrap gap-1.5">
             {techStack.frontend.map((tech) => (
               <span
                 key={tech}
-                className={tagClass}
-                style={{
-                  border: 'var(--border-width) solid var(--color-accent)',
-                  color: 'var(--color-accent)',
-                  background: 'var(--color-surface)',
-                }}
+                className={`${tagClass} border-(length:--border-width) border-solid border-(--color-accent) text-(--color-accent) bg-(--color-surface)`}
               >
                 {tech}
               </span>
@@ -48,19 +43,14 @@ export default function TechStackTags({
       )}
       {hasBackend && (
         <div>
-          <p className={labelClass} style={{ color: 'var(--color-muted)' }}>
+          <p className={`${labelClass} text-(--color-muted)`}>
             Backend
           </p>
           <div className="flex flex-wrap gap-1.5">
             {techStack.backend.map((tech) => (
               <span
                 key={tech}
-                className={tagClass}
-                style={{
-                  border: 'var(--border-width) solid var(--color-border)',
-                  color: 'var(--color-text)',
-                  background: 'var(--color-surface)',
-                }}
+                className={`${tagClass} border-(length:--border-width) border-solid border-(--color-border) text-(--color-text) bg-(--color-surface)`}
               >
                 {tech}
               </span>

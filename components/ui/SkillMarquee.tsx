@@ -53,9 +53,10 @@ export default function SkillMarquee({
       className={`overflow-hidden whitespace-nowrap ${className}`}
       aria-label="기술 스택 목록"
     >
+      {/* animationDuration은 props로 받는 동적 계산값이므로 인라인 유지 */}
       <div
-        className={reverse ? 'animate-marquee-reverse' : 'animate-marquee'}
-        style={{ animationDuration: `${duration}s`, display: 'inline-flex' }}
+        className={`inline-flex ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}
+        style={{ animationDuration: `${duration}s` }}
       >
         {duplicated.map((skill, i) => (
           <TagItem
