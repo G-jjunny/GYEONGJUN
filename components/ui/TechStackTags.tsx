@@ -3,7 +3,7 @@
 // ProjectCard (compact 모드) 및 ProjectModal에서 공통 사용
 // =============================================================
 
-import type { TechStack } from '@/data/portfolio';
+import type { TechStack } from "@/data/portfolio";
 
 interface TechStackTagsProps {
   techStack: TechStack;
@@ -16,19 +16,19 @@ export default function TechStackTags({
   compact = false,
 }: TechStackTagsProps) {
   const labelClass = compact
-    ? 'mb-1 text-[10px] font-bold uppercase tracking-widest'
-    : 'mb-2 text-xs font-bold uppercase tracking-widest';
-  const tagClass = compact ? 'px-2 py-0.5 text-xs font-bold' : 'px-3 py-1 text-xs font-bold';
+    ? "mb-1 text-[10px] font-bold uppercase tracking-widest"
+    : "mb-2 text-xs font-bold uppercase tracking-widest";
+  const tagClass = compact
+    ? "px-2 py-0.5 text-xs font-bold"
+    : "px-3 py-1 text-xs font-bold";
   const hasFrontend = techStack.frontend.length > 0;
-  const hasBackend = techStack.backend.length > 0;
+  const hasBackend = techStack.backend && techStack.backend.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       {hasFrontend && (
         <div>
-          <p className={`${labelClass} text-(--color-muted)`}>
-            Frontend
-          </p>
+          <p className={`${labelClass} text-(--color-muted)`}>Frontend</p>
           <div className="flex flex-wrap gap-1.5">
             {techStack.frontend.map((tech) => (
               <span
@@ -43,11 +43,9 @@ export default function TechStackTags({
       )}
       {hasBackend && (
         <div>
-          <p className={`${labelClass} text-(--color-muted)`}>
-            Backend
-          </p>
+          <p className={`${labelClass} text-(--color-muted)`}>Backend</p>
           <div className="flex flex-wrap gap-1.5">
-            {techStack.backend.map((tech) => (
+            {techStack.backend?.map((tech) => (
               <span
                 key={tech}
                 className={`${tagClass} border-(length:--border-width) border-solid border-(--color-border) text-(--color-text) bg-(--color-surface)`}
