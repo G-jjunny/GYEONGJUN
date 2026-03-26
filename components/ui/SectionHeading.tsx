@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 // =============================================================
 // SectionHeading — 섹션 제목 공통 컴포넌트
@@ -18,38 +18,35 @@ interface SectionHeadingProps {
 export default function SectionHeading({
   children,
   subtitle,
-  className = '',
+  className = "",
 }: SectionHeadingProps) {
   return (
     <motion.div
       className={`mb-12 ${className}`}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <h2
         className={[
-          'text-4xl md:text-5xl font-black tracking-tight',
-          'text-[var(--color-text)]',
-          'relative inline-block',
-        ].join(' ')}
+          "text-4xl md:text-5xl font-black tracking-tight",
+          "text-(--color-text)",
+          "relative inline-block",
+        ].join(" ")}
       >
         {children}
         {/* accent 언더라인 */}
         <span
-          className={[
-            'absolute left-0 -bottom-2 h-[4px] w-full',
-            'bg-[var(--color-accent)]',
-          ].join(' ')}
+          className={["absolute left-0 -bottom-2 h-1 w-full", "bg-accent"].join(
+            " ",
+          )}
           aria-hidden="true"
         />
       </h2>
 
       {subtitle && (
-        <p className="mt-4 text-lg text-[var(--color-text-muted)]">
-          {subtitle}
-        </p>
+        <p className="mt-4 text-lg text-(--color-muted)">{subtitle}</p>
       )}
     </motion.div>
   );

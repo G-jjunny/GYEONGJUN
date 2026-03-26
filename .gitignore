@@ -43,4 +43,4 @@ next-env.d.ts
 #claude
 .claude*
 CLAUDE.md
-/data/portfolio.ts
+# /data/portfolio.ts

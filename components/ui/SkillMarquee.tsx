@@ -27,11 +27,11 @@ function TagItem({ name, highlighted = false }: SkillTag) {
       className={[
         'inline-flex items-center shrink-0',
         'px-4 py-2 mx-2 font-bold text-sm',
-        'rounded-[var(--radius)]',
-        'border-[length:var(--border-width)] border-solid',
+        'rounded-(--radius)',
+        'border-(length:--border-width) border-solid',
         highlighted
-          ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-bg)]'
-          : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)]',
+          ? 'border-accent bg-accent text-(--color-bg)'
+          : 'border-(--color-border) bg-(--color-surface) text-(--color-text)',
       ].join(' ')}
     >
       {name}
@@ -53,9 +53,10 @@ export default function SkillMarquee({
       className={`overflow-hidden whitespace-nowrap ${className}`}
       aria-label="기술 스택 목록"
     >
+      {/* animationDuration은 props로 받는 동적 계산값이므로 인라인 유지 */}
       <div
-        className={reverse ? 'animate-marquee-reverse' : 'animate-marquee'}
-        style={{ animationDuration: `${duration}s`, display: 'inline-flex' }}
+        className={`inline-flex ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}
+        style={{ animationDuration: `${duration}s` }}
       >
         {duplicated.map((skill, i) => (
           <TagItem

@@ -2,6 +2,7 @@
 
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { forwardRef } from 'react';
+import { springPress } from '@/lib/motion';
 
 // =============================================================
 // BrutalButton — 네오 브루탈리즘 버튼 컴포넌트
@@ -19,26 +20,20 @@ interface BrutalButtonProps
 
 const variantStyles: Record<Variant, string> = {
   primary: [
-    'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
-    'bg-[var(--color-accent)] text-[var(--color-bg)]',
-    'shadow-[var(--shadow-md)]',
+    'border-(length:--border-width) border-solid border-accent',
+    'bg-accent text-(--color-bg)',
+    'shadow-(--shadow-md)',
   ].join(' '),
   secondary: [
-    'border-[length:var(--border-width)] border-solid border-[var(--color-accent)]',
-    'bg-[var(--color-surface)] text-[var(--color-accent)]',
-    'shadow-[var(--shadow-md)]',
+    'border-(length:--border-width) border-solid border-accent',
+    'bg-surface text-accent',
+    'shadow-(--shadow-md)',
   ].join(' '),
   ghost: [
-    'border-[length:var(--border-width)] border-solid border-[var(--color-border)]',
-    'bg-transparent text-[var(--color-text)]',
+    'border-(length:--border-width) border-solid border-(--color-border)',
+    'bg-transparent text-(--color-text)',
     'shadow-none',
   ].join(' '),
-};
-
-const springTransition = {
-  type: 'spring' as const,
-  stiffness: 500,
-  damping: 30,
 };
 
 const BrutalButton = forwardRef<HTMLButtonElement, BrutalButtonProps>(
@@ -49,7 +44,7 @@ const BrutalButton = forwardRef<HTMLButtonElement, BrutalButtonProps>(
         className={[
           'inline-flex items-center justify-center',
           'px-6 py-3 font-bold cursor-pointer',
-          'rounded-[var(--radius)]',
+          'rounded-(--radius)',
           variantStyles[variant],
           className,
         ].join(' ')}
@@ -57,13 +52,13 @@ const BrutalButton = forwardRef<HTMLButtonElement, BrutalButtonProps>(
           x: 2,
           y: 2,
           boxShadow: 'var(--shadow-sm)',
-          transition: springTransition,
+          transition: springPress,
         }}
         whileTap={{
           x: 4,
           y: 4,
           boxShadow: '0px 0px 0px transparent',
-          transition: springTransition,
+          transition: springPress,
         }}
         {...props}
       >
