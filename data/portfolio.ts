@@ -98,6 +98,7 @@ export const portfolioData: PortfolioData = {
   },
 
   skills: [
+    // frontend skills
     {
       name: "React",
       category: "frontend",
@@ -131,6 +132,67 @@ export const portfolioData: PortfolioData = {
     {
       name: "Tailwind CSS",
       category: "frontend",
+      level: 5,
+    },
+
+    // backend skills
+    {
+      name: "Node.js",
+      category: "backend",
+      level: 5,
+    },
+    {
+      name: "Express",
+      category: "backend",
+      level: 5,
+    },
+    {
+      name: "PostgreSQL",
+      category: "backend",
+      level: 5,
+    },
+
+    // devops skills
+    {
+      name: "Docker",
+      category: "devops",
+      level: 4,
+    },
+    {
+      name: "Git",
+      category: "devops",
+      level: 4,
+    },
+    {
+      name: "Vercel",
+      category: "devops",
+      level: 4,
+    },
+    {
+      name: "Netlify",
+      category: "devops",
+      level: 4,
+    },
+    {
+      name: "Render",
+      category: "devops",
+      level: 4,
+    },
+
+    // tools
+    {
+      name: "Claude code",
+      category: "tool",
+      level: 5,
+    },
+    {
+      name: "Figma",
+      category: "tool",
+      level: 5,
+    },
+    {
+      name: "Postman",
+      category: "tool",
       level: 5,
     },
   ],
