@@ -116,7 +116,7 @@ export default function AboutSection({
             className="pointer-events-none absolute select-none font-black leading-none text-accent"
             style={{
               top: "0.1em",
-              left: "0.3em",
+              right: "0.3em",
               fontSize: "clamp(4rem, 8vw, 6rem)",
               opacity: 0.12,
             }}
@@ -127,7 +127,7 @@ export default function AboutSection({
 
           {/* 이름 / 직함 라벨 */}
           {(name || title) && (
-            <div className="my-4 flex flex-wrap items-center gap-2">
+            <div className="mb-4 flex flex-wrap items-center gap-2">
               {name && (
                 <span className="border-2 border-solid border-accent bg-surface px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-widest text-accent">
                   {name}

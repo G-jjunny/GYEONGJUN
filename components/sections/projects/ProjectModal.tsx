@@ -4,6 +4,7 @@ import { useEffect, useCallback, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import type { Project } from '@/data/portfolio';
+import { useModalStore } from '@/store/modalStore';
 import BrutalButton from '@/components/ui/BrutalButton';
 import TechStackTags from '@/components/ui/TechStackTags';
 import Lightbox from '@/components/ui/Lightbox';
@@ -21,6 +22,17 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const setLightboxOpen = useModalStore((s) => s.setLightboxOpen);
+
+  const openLightbox = (idx: number) => {
+    setLightboxIndex(idx);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+    setLightboxOpen(false);
+  };
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -103,7 +115,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   boxShadow: 'var(--shadow-md)',
                   transition: springFast,
                 }}
-                onClick={() => setLightboxIndex(idx)}
+                onClick={() => openLightbox(idx)}
               >
                 <Image
                   src={img}
@@ -122,7 +134,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           <Lightbox
             images={project.images}
             initialIndex={lightboxIndex}
-            onClose={() => setLightboxIndex(null)}
+            onClose={closeLightbox}
           />
         )}
 

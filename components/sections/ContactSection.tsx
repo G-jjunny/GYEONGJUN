@@ -132,8 +132,8 @@ export default function ContactSection({
         <h3
           className="mt-3 text-3xl font-black md:text-4xl text-(--color-text)"
         >
-          {displayName}
-          <span className="text-(--color-accent)">과 함께 만들어요</span>
+          Connect with{" "}
+          <span className="text-(--color-accent)">{displayName}</span>
         </h3>
         <div
           className="mx-auto mt-6 h-1 w-20 bg-(--color-accent)"
