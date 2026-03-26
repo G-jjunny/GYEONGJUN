@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useCallback, useState } from 'react';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { springPress, springFast } from '@/lib/motion';
+import { useEffect, useCallback, useState } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { springPress, springFast } from "@/lib/motion";
 
 // =============================================================
 // Lightbox — 풀스크린 이미지 뷰어 (네오 브루탈리즘)
@@ -16,7 +16,11 @@ interface LightboxProps {
   onClose: () => void;
 }
 
-export default function Lightbox({ images, initialIndex, onClose }: LightboxProps) {
+export default function Lightbox({
+  images,
+  initialIndex,
+  onClose,
+}: LightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
   const goToPrev = useCallback(() => {
@@ -30,13 +34,13 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       switch (e.key) {
-        case 'Escape':
+        case "Escape":
           onClose();
           break;
-        case 'ArrowLeft':
+        case "ArrowLeft":
           goToPrev();
           break;
-        case 'ArrowRight':
+        case "ArrowRight":
           goToNext();
           break;
       }
@@ -45,9 +49,9 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
   );
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
 
@@ -63,7 +67,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
         {/* 배경 오버레이 */}
         <div
           className="absolute inset-0 cursor-pointer"
-          style={{ background: 'rgba(0, 0, 0, 0.9)' }}
+          style={{ background: "rgba(0, 0, 0, 0.9)" }}
           onClick={onClose}
         />
 
@@ -73,13 +77,13 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
           whileHover={{
             x: 2,
             y: 2,
-            boxShadow: 'var(--shadow-sm)',
+            boxShadow: "var(--shadow-sm)",
             transition: springPress,
           }}
           whileTap={{
             x: 4,
             y: 4,
-            boxShadow: '0px 0px 0px transparent',
+            boxShadow: "0px 0px 0px transparent",
             transition: springPress,
           }}
           onClick={onClose}
@@ -102,7 +106,6 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
               alt={`이미지 ${currentIndex + 1} / ${images.length}`}
               fill
               sizes="(max-width: 768px) 100vw, 896px"
-              className="object-contain"
               className="object-contain bg-(--color-bg)"
               priority
             />
@@ -116,13 +119,13 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             whileHover={{
               x: 2,
               y: 2,
-              boxShadow: 'var(--shadow-sm)',
+              boxShadow: "var(--shadow-sm)",
               transition: springPress,
             }}
             whileTap={{
               x: 4,
               y: 4,
-              boxShadow: '0px 0px 0px transparent',
+              boxShadow: "0px 0px 0px transparent",
               transition: springPress,
             }}
             onClick={goToPrev}
@@ -139,13 +142,13 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             whileHover={{
               x: 2,
               y: 2,
-              boxShadow: 'var(--shadow-sm)',
+              boxShadow: "var(--shadow-sm)",
               transition: springPress,
             }}
             whileTap={{
               x: 4,
               y: 4,
-              boxShadow: '0px 0px 0px transparent',
+              boxShadow: "0px 0px 0px transparent",
               transition: springPress,
             }}
             onClick={goToNext}
@@ -157,9 +160,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
 
         {/* 카운터 */}
         {images.length > 1 && (
-          <div
-            className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 px-4 py-2 font-mono font-black border-(length:--border-width) border-solid border-(--color-border) bg-(--color-surface) text-(--color-text) shadow-(--shadow-sm)"
-          >
+          <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 px-4 py-2 font-mono font-black border-(length:--border-width) border-solid border-(--color-border) bg-(--color-surface) text-(--color-text) shadow-(--shadow-sm)">
             {currentIndex + 1} / {images.length}
           </div>
         )}
