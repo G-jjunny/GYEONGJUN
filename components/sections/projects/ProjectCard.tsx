@@ -76,8 +76,8 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="inline-block px-3 py-1 text-xs font-bold border-(length:--border-width) border-solid border-(--color-border) text-(--color-text) shadow-(--shadow-sm)"
-              whileHover={{ x: 2, y: 2, boxShadow: "var(--shadow-sm)" }}
-              whileTap={{ x: 4, y: 4, boxShadow: "0px 0px 0px transparent" }}
+              whileHover={{ x: 2, y: 2 }}
+              whileTap={{ x: 4, y: 4 }}
               transition={springPress}
             >
               GitHub
@@ -90,8 +90,8 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="inline-block px-3 py-1 text-xs font-bold border-(length:--border-width) border-solid border-(--color-border) text-(--color-text) shadow-(--shadow-sm)"
-              whileHover={{ x: 2, y: 2, boxShadow: "var(--shadow-sm)" }}
-              whileTap={{ x: 4, y: 4, boxShadow: "0px 0px 0px transparent" }}
+              whileHover={{ x: 2, y: 2 }}
+              whileTap={{ x: 4, y: 4 }}
               transition={springPress}
             >
               Demo

@@ -88,7 +88,7 @@ export default function AboutSection({
       >
         {/* 프로필 이미지 — clamp() 동적 반응형 값은 인라인 유지 */}
         <div
-          className="relative shrink-0 overflow-hidden border-(length:--border-width) border-solid border-accent shadow-lg"
+          className="relative shrink-0 overflow-hidden border-(length:--border-width) border-solid border-accent [box-shadow:var(--shadow-lg)]"
           style={{
             width: "clamp(120px, 18vw, 200px)",
             height: "clamp(120px, 18vw, 200px)",
@@ -110,7 +110,7 @@ export default function AboutSection({
         </div>
 
         {/* Bio 카드 */}
-        <div className="relative flex-1 border-2 border-solid border-border bg-card p-6 shadow-md sm:p-8">
+        <div className="relative flex-1 border-2 border-solid border-border bg-card p-6 [box-shadow:var(--shadow-md)] sm:p-8">
           {/* 큰따옴표 데코 */}
           <span
             className="pointer-events-none absolute select-none font-black leading-none text-accent"
@@ -290,17 +290,10 @@ function SkillTag({ skill, variant }: SkillTagProps) {
       whileHover={{
         x: -2,
         y: -2,
-        boxShadow:
-          variant === "accent"
-            ? "5px 5px 0 var(--color-accent)"
-            : variant === "border"
-              ? "5px 5px 0 var(--color-border)"
-              : "4px 4px 0 var(--color-muted)",
       }}
       whileTap={{
         x: 1,
         y: 1,
-        boxShadow: "0px 0px 0px transparent",
       }}
       transition={{ ...springFast }}
       className="list-none border-2 border-solid px-3 py-1.5 font-mono text-sm font-bold uppercase tracking-wide cursor-default"

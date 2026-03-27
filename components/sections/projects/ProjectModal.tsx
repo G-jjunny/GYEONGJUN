@@ -61,8 +61,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     >
       {/* 오버레이 배경 */}
       <motion.div
-        className="absolute inset-0"
-        style={{ background: 'rgba(0, 0, 0, 0.8)' }}
+        className="absolute inset-0 bg-black/80"
         onClick={onClose}
       />
 
@@ -112,7 +111,6 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                 whileHover={{
                   x: -2,
                   y: -2,
-                  boxShadow: 'var(--shadow-md)',
                   transition: springFast,
                 }}
                 onClick={() => openLightbox(idx)}

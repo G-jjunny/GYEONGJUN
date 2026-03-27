@@ -2,9 +2,9 @@
 // Theme Store — Zustand persist 미들웨어 기반
 // =============================================================
 
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { Theme } from '@/types/theme';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { Theme } from "@/types/theme";
 
 interface ThemeStore {
   theme: Theme;
@@ -14,14 +14,11 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
-      theme: 'amber',
+      theme: "amber",
       setTheme: (theme: Theme) => {
         set({ theme });
-        if (typeof document !== 'undefined') {
-          document.documentElement.setAttribute('data-theme', theme);
-        }
       },
     }),
-    { name: 'portfolio-theme' },
+    { name: "portfolio-theme" },
   ),
 );

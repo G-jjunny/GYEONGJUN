@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { springBase } from "@/lib/motion";
 
 // =============================================================
 // SectionHeading — 섹션 제목 공통 컴포넌트
@@ -26,7 +27,7 @@ export default function SectionHeading({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={springBase}
     >
       <h2
         className={[

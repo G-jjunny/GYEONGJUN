@@ -66,8 +66,7 @@ export default function Lightbox({
       >
         {/* 배경 오버레이 */}
         <div
-          className="absolute inset-0 cursor-pointer"
-          style={{ background: "rgba(0, 0, 0, 0.9)" }}
+          className="absolute inset-0 cursor-pointer bg-black/90"
           onClick={onClose}
         />
 
@@ -77,13 +76,11 @@ export default function Lightbox({
           whileHover={{
             x: 2,
             y: 2,
-            boxShadow: "var(--shadow-sm)",
             transition: springPress,
           }}
           whileTap={{
             x: 4,
             y: 4,
-            boxShadow: "0px 0px 0px transparent",
             transition: springPress,
           }}
           onClick={onClose}
@@ -119,13 +116,11 @@ export default function Lightbox({
             whileHover={{
               x: 2,
               y: 2,
-              boxShadow: "var(--shadow-sm)",
               transition: springPress,
             }}
             whileTap={{
               x: 4,
               y: 4,
-              boxShadow: "0px 0px 0px transparent",
               transition: springPress,
             }}
             onClick={goToPrev}
@@ -142,13 +137,11 @@ export default function Lightbox({
             whileHover={{
               x: 2,
               y: 2,
-              boxShadow: "var(--shadow-sm)",
               transition: springPress,
             }}
             whileTap={{
               x: 4,
               y: 4,
-              boxShadow: "0px 0px 0px transparent",
               transition: springPress,
             }}
             onClick={goToNext}
