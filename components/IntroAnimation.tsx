@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useIntroStore } from "@/store/introStore";
 
 // =============================================================
-// IntroAnimation — Plan A: 독자적 랜딩 인트로 오버레이
+// IntroAnimation — 퍼센트 카운터 + 진행 바 + 타이핑 효과 인트로 오버레이
 //
 // 상태 흐름:
 //   'init'    → SSR + useEffect 실행 전. 단순 blocking div로 Hero 가림
@@ -16,8 +17,8 @@ import { useEffect, useState } from "react";
 // =============================================================
 
 interface IntroAnimationProps {
-  name: string;
-  title: string;
+  name: string; // 좌측 상단 로고 텍스트로 사용
+  title: string; // 현재 사용 안함, 시그니처 유지
 }
 
 type Phase = "init" | "playing" | "done";
@@ -26,8 +27,52 @@ const SHOW_DURATION = 2300;
 const EXIT_DURATION = 650;
 const CURTAIN_EASE = [0.76, 0, 0.24, 1] as const;
 
-export default function IntroAnimation({ name, title }: IntroAnimationProps) {
+// 타이핑 시퀀스 정의
+const TYPING_SEQUENCE: { text: string; startAt: number }[] = [
+  { text: "LOADING...", startAt: 0 },
+  { text: "ALMOST THERE...", startAt: 800 },
+  { text: "WELCOME", startAt: 1700 },
+];
+const TYPING_CHAR_INTERVAL = 60; // ms per character
+
+export default function IntroAnimation({
+  name,
+  title: _title,
+}: IntroAnimationProps) {
   const [phase, setPhase] = useState<Phase>("init");
+  const [count, setCount] = useState(0);
+  const [typedText, setTypedText] = useState("");
+  const markComplete = useIntroStore((s) => s.markComplete);
+
+  // 타이핑 시퀀스 cleanup용 timeout ref 목록
+  const typingTimeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // 타이핑 시퀀스 시작 함수
+  // 각 시퀀스는 절대 startAt ms 기준으로 독립 스케줄링
+  const startTypingSequence = () => {
+    setTypedText("");
+    typingTimeoutsRef.current = [];
+
+    TYPING_SEQUENCE.forEach((seq) => {
+      // seq.startAt ms 후에 해당 텍스트 타이핑 시작
+      const seqTimer = setTimeout(() => {
+        let charIdx = 0;
+        setTypedText(""); // 새 시퀀스 시작 시 초기화
+
+        const typeNextChar = () => {
+          setTypedText(seq.text.slice(0, charIdx));
+          charIdx++;
+          if (charIdx <= seq.text.length) {
+            const charTimer = setTimeout(typeNextChar, TYPING_CHAR_INTERVAL);
+            typingTimeoutsRef.current.push(charTimer);
+          }
+        };
+        typeNextChar();
+      }, seq.startAt);
+
+      typingTimeoutsRef.current.push(seqTimer);
+    });
+  };
 
   useEffect(() => {
     // 세션 이미 방문한 경우 즉시 제거 (애니메이션 없음)
@@ -40,7 +85,33 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
     setPhase("playing");
     document.body.style.overflow = "hidden";
 
+    // ── 퍼센트 카운터 (requestAnimationFrame 기반 easeIn 커브) ──
+    const counterDuration = SHOW_DURATION * 0.85;
+    let startTime: number | null = null;
+    let rafId = 0;
+
+    const animateCounter = (timestamp: number) => {
+      if (startTime === null) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const t = Math.min(elapsed / counterDuration, 1);
+      // quadratic easeIn: 초반 느리게, 후반 빠르게
+      const progress = t * t;
+      setCount(Math.floor(progress * 100));
+
+      if (t < 1) {
+        rafId = requestAnimationFrame(animateCounter);
+      } else {
+        setCount(100);
+      }
+    };
+    rafId = requestAnimationFrame(animateCounter);
+
+    // ── 타이핑 시퀀스 시작 ──
+    startTypingSequence();
+
+    // ── 종료 타이머 ──
     const hideTimer = setTimeout(() => {
+      markComplete();
       setPhase("done");
       sessionStorage.setItem("intro-shown", "1");
     }, SHOW_DURATION);
@@ -50,193 +121,111 @@ export default function IntroAnimation({ name, title }: IntroAnimationProps) {
     }, SHOW_DURATION + EXIT_DURATION);
 
     return () => {
+      cancelAnimationFrame(rafId);
       clearTimeout(hideTimer);
       clearTimeout(unlockTimer);
+      typingTimeoutsRef.current.forEach(clearTimeout);
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [markComplete]);
 
   // ── init: useEffect 전 SSR/hydration 구간 ──
-  // 단순 blocking div로 Hero 섹션을 즉시 가림 (JS 로드 전 공백 방지)
+  // 단순 blocking div로 Hero 섹션을 즉시 가림
   if (phase === "init") {
-    return (
-      <div
-        className="fixed inset-0 z-200 bg-(--color-bg)"
-      />
-    );
+    return <div className="fixed inset-0 z-[200] bg-(--color-bg)" />;
   }
 
-  // ── playing / done: AnimatePresence가 exit 애니메이션 담당 ──
   return (
     <AnimatePresence>
       {phase === "playing" && (
         <motion.div
-          className="fixed inset-0 z-200 flex flex-col items-center justify-center overflow-hidden bg-(--color-bg)"
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-hidden bg-(--color-bg)"
           exit={{
             y: "-100%",
             transition: { duration: EXIT_DURATION / 1000, ease: CURTAIN_EASE },
           }}
         >
-          {/* 장식 기하 요소 */}
-          <DecoBlocks />
+          {/* ── 좌측 상단 로고 텍스트 ── */}
+          <motion.span
+            className="absolute top-8 left-8 font-mono text-(--color-muted)"
+            style={{ fontSize: "0.75rem" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 24,
+              delay: 0.1,
+            }}
+          >
+            {name}
+          </motion.span>
 
-          {/* 메인 콘텐츠 */}
-          <div className="relative z-10 px-6 text-center">
-            {/* 이름 — offset shadow + stamp 효과 */}
-            <div className="relative inline-block">
-              {/* offset shadow 레이어 */}
-              {/* fontSize clamp() 동적 반응형 값이므로 인라인 유지, 나머지는 className으로 */}
-              <motion.span
-                aria-hidden="true"
-                className="absolute select-none font-black leading-none tracking-tighter top-2 left-2 opacity-30 whitespace-nowrap pointer-events-none text-(--color-border)"
-                style={{
-                  fontSize: "clamp(3.5rem, 13vw, 10rem)",
-                }}
-                initial={{ y: -80, opacity: 0, scale: 1.25 }}
-                animate={{ y: 8, opacity: 0.3, scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 450,
-                  damping: 16,
-                  delay: 0.1,
-                }}
-              >
-                {name}
-              </motion.span>
-
-              {/* 실제 이름 텍스트 */}
-              {/* fontSize clamp() 동적 반응형 값이므로 인라인 유지 */}
-              <motion.h1
-                className="relative select-none font-black leading-none tracking-tighter text-(--color-accent) whitespace-nowrap"
-                style={{
-                  fontSize: "clamp(3.5rem, 13vw, 10rem)",
-                }}
-                initial={{ y: -80, opacity: 0, scale: 1.25 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 450,
-                  damping: 16,
-                  delay: 0.1,
-                }}
-              >
-                {name}
-              </motion.h1>
-            </div>
-
-            {/* accent 라인 */}
+          {/* ── 중앙 콘텐츠 스택 ── */}
+          <div className="flex flex-col items-center">
+            {/* 1. 퍼센트 카운터 */}
             <motion.div
-              className="mx-auto mt-3 h-1.25 w-full bg-(--color-accent) origin-left"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.45, delay: 0.55, ease: "easeOut" }}
-            />
-
-            {/* 직함 */}
-            {/* fontSize clamp() 동적 반응형 값이므로 인라인 유지 */}
-            <motion.p
-              className="mt-5 font-bold uppercase tracking-[0.4em] text-(--color-muted)"
-              style={{
-                fontSize: "clamp(0.7rem, 1.4vw, 0.9rem)",
-              }}
-              initial={{ opacity: 0, y: 14 }}
+              className="font-black text-(--color-accent) leading-none tabular-nums"
+              style={{ fontSize: "clamp(4rem, 12vw, 10rem)" }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.75 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 20,
+              }}
             >
-              {title}
-            </motion.p>
-          </div>
+              {count}%
+            </motion.div>
 
-          {/* 하단 진행 바 */}
-          <motion.div
-            className="absolute bottom-0 left-0 h-0.75 w-full bg-(--color-accent) origin-left"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: SHOW_DURATION / 1000, ease: "linear" }}
-          />
+            {/* 2. 진행 바 */}
+            <motion.div
+              className="mt-6 relative overflow-hidden border-2 border-(--color-border)"
+              style={{
+                width: "clamp(280px, 50vw, 480px)",
+                height: "5px",
+                boxShadow: "3px 3px 0 var(--color-border)",
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 24,
+                delay: 0.15,
+              }}
+            >
+              {/* fill bar — overflow-hidden으로 border 안에 클리핑 */}
+              <div
+                className="absolute inset-0 bg-(--color-accent)"
+                style={{ width: `${count}%`, transition: "width 50ms linear" }}
+              />
+            </motion.div>
+
+            {/* 3. 타이핑 효과 텍스트 */}
+            <motion.div
+              className="mt-5 font-mono text-base text-(--color-muted) flex items-center min-h-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 24,
+                delay: 0.2,
+              }}
+            >
+              <span>{typedText}</span>
+              {/* 깜빡이는 커서 */}
+              <span
+                className="ml-px text-(--color-accent) animate-blink"
+                aria-hidden="true"
+              >
+                |
+              </span>
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
-  );
-}
-
-// --------------- 장식 기하 요소 ---------------
-
-function DecoBlocks() {
-  return (
-    <>
-      {/* 우상단 — accent 블록 */}
-      {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
-      <motion.div
-        className="absolute right-[8%] top-[12%] bg-(--color-accent) border-(length:--border-width) border-solid border-(--color-border)"
-        style={{
-          width: "clamp(56px, 7vw, 110px)",
-          height: "clamp(56px, 7vw, 110px)",
-        }}
-        initial={{ scale: 0, rotate: 14 }}
-        animate={{ scale: 1, rotate: 14 }}
-        transition={{
-          type: "spring",
-          stiffness: 320,
-          damping: 14,
-          delay: 0.25,
-        }}
-      />
-
-      {/* 좌하단 — outline 블록 */}
-      {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
-      <motion.div
-        className="absolute bottom-[18%] left-[7%] bg-transparent border-(length:--border-width) border-solid border-(--color-accent)"
-        style={{
-          width: "clamp(36px, 4.5vw, 72px)",
-          height: "clamp(36px, 4.5vw, 72px)",
-        }}
-        initial={{ scale: 0, rotate: -10 }}
-        animate={{ scale: 1, rotate: -10 }}
-        transition={{
-          type: "spring",
-          stiffness: 320,
-          damping: 14,
-          delay: 0.35,
-        }}
-      />
-
-      {/* 좌상단 — ㄱ자 브라켓 */}
-      {/* width는 clamp() 동적 반응형 값이므로 인라인 유지, height는 CSS 변수 토큰 */}
-      <motion.div
-        className="absolute left-[7%] top-[18%] bg-(--color-muted) origin-left"
-        style={{
-          width: "clamp(40px, 5vw, 72px)",
-          height: "var(--border-width)",
-        }}
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.35, delay: 0.5, ease: "easeOut" }}
-      />
-      {/* height는 clamp() 동적 반응형 값이므로 인라인 유지, width는 CSS 변수 토큰 */}
-      <motion.div
-        className="absolute left-[7%] top-[18%] bg-(--color-muted) origin-top"
-        style={{
-          width: "var(--border-width)",
-          height: "clamp(40px, 5vw, 72px)",
-        }}
-        initial={{ scaleY: 0 }}
-        animate={{ scaleY: 1 }}
-        transition={{ duration: 0.35, delay: 0.5, ease: "easeOut" }}
-      />
-
-      {/* 우하단 — accent 점 */}
-      {/* width/height는 clamp() 동적 반응형 값이므로 인라인 유지 */}
-      <motion.div
-        className="absolute bottom-[22%] right-[9%] bg-(--color-accent)"
-        style={{
-          width: "clamp(10px, 1.4vw, 16px)",
-          height: "clamp(10px, 1.4vw, 16px)",
-        }}
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.6 }}
-      />
-    </>
   );
 }
