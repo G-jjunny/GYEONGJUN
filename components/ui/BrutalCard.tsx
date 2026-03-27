@@ -39,7 +39,6 @@ const BrutalCard = forwardRef<HTMLDivElement, BrutalCardProps>(
             ? {
                 x: -3,
                 y: -3,
-                boxShadow: "var(--shadow-lg)",
                 transition: springFast,
               }
             : undefined

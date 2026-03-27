@@ -3,6 +3,7 @@ import { Space_Grotesk, Noto_Sans_KR } from "next/font/google";
 import Script from "next/script";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import ThemePanelConnected from "@/components/ui/ThemePanelConnected";
+import CustomCursor from "@/components/ui/CustomCursor";
 import { portfolioData } from "@/data/portfolio";
 import "./globals.css";
 
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${notoSansKr.variable} antialiased`}
       >
+        <CustomCursor />
         <ThemeProvider>
           {children}
           <ThemePanelConnected />
